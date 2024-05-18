@@ -22,4 +22,16 @@
 | Node.js | 20.9.0 | 服务器 |
 | Express | 4.16.1 | 服务器框架 |
 
-## 3. 项目结构
+## 3. 参考文档
+
+### 前端
+
+[1] Vue3 安装和入门 <https://cn.vuejs.org/guide/quick-start.html#creating-a-vue-application>
+
+[2] Vue 模板语法 <https://cn.vuejs.org/guide/essentials/template-syntax.html>
+
+[3] Vue 组件基础 <https://cn.vuejs.org/guide/components/introduction.html>
+
+### 后端
+
+[1] Express 入门 <https://developer.mozilla.org/zh-CN/docs/Learn/Server-side/Express_Nodejs/Introduction>

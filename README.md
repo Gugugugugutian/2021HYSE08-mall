@@ -37,7 +37,7 @@
 
 [2] Vue 模板语法 <https://cn.vuejs.org/guide/essentials/template-syntax.html>
 
-[3] Vue 组件基础 <https://cn.vuejs.org/guide/components/introduction.html>
+[3] Vue 组件基础 <https://cn.vuejs.org/guide/essentials/component-basics.html>
 
 ### 后端
 

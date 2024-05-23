@@ -26,7 +26,7 @@ const router = createRouter({
         }
       ]
     }, {
-      // 搜索页
+      // 商品搜索页
       path: '/search',
       name: 'search',
       component: () => import('../views/SearchView.vue')

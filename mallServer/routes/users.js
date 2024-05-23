@@ -22,11 +22,12 @@ router.get('/', function (req, res, next) {
         pool.query(sql.createTable, function (err, result) {
             if (err) {
                 console.log('[DB INITIALIZE ERROR] - ', err.message);
+            } else {
+                res.json({
+                    status: '0',
+                    msg: 'Succees to connect database on server.'
+                });
             }
-        });
-        res.json({
-            status: '0',
-            msg: 'Succees to connect database on server.'
         });
     } else {
         res.json({

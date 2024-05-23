@@ -20,6 +20,9 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
+    },
+    headers: {
+      'Access-Control-Allow-Origin': '*',
     }
   }
 })

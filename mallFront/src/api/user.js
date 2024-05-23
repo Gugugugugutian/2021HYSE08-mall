@@ -9,20 +9,31 @@ export function testConnection() {
 }
 
 // 用户登录
-export function userLogin (params) {
-  return httpPost({
-      url: '/api/users/login/',
-      data: params
-  })
+export function userLogin (username, password) {
+    return httpPost({
+        url: '/api/users/login/',
+        data: {
+            username: username,
+            password: password,
+        },
+    })
 }
 
 // 用户注册
 export function userRegister (username, password) {
   return httpPost({
       url: '/api/users/register/',
-      data: new Object({
+      data: {
           username: username,
           password: password
-      }),
+      },
+  })
+}
+
+// 检查登录状态
+export function checkLoginStatus () {
+  return httpGet({
+      url: '/api/users/checkLogin/',
+      params: {},
   })
 }

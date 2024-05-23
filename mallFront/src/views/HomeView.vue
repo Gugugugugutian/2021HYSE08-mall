@@ -1,4 +1,4 @@
-<script setup>
+<script>
 </script>
 
 <template>
@@ -6,3 +6,6 @@
     This is the home page.
   </main>
 </template>
+
+<style>
+</style>

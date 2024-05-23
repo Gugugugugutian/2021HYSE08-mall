@@ -39,9 +39,10 @@ router.get('/', function (req, res, next) {
 
 // @URL /users/register/
 // @FUNCTION 创建用户
-// @Code  0     成功创建用户
-//        -1    用户名已存在，无法创建
-//        -2    数据库连接失败
+// @RETURN { status, msg }
+// @Status      0       成功创建用户
+//              1       用户名已存在，无法创建
+//              -1      数据库连接失败
 router.post('/register/', (req, res, next) => {
     let userName = req.body.username;
     let password = req.body.password;
@@ -49,26 +50,26 @@ router.post('/register/', (req, res, next) => {
     pool.query(sql.getUserByName, [userName], function (err, result) {
         if (err) {
             console.log('[SELECT ERROR] - ', err.message);
-            res.send({
+            res.json({
                 status: '-1',
                 msg: 'Failed to connect database on server.'
             });
         } else {
             if (result.length > 0) {
-                res.send({
-                    status: '-1',
+                res.json({
+                    status: '1',
                     msg: 'User name already exists.'
                 });
             } else {
                 pool.query(sql.createUser, [userName, password, false], function (err, result) {
                     if (err) {
                         console.log('[INSERT ERROR] - ', err.message);
-                        res.send({
-                            status: '-2',
+                        res.json({
+                            status: '-1',
                             msg: 'Failed to connect database on server.'
                         });
                     } else {
-                        res.send({
+                        res.json({
                             status: '0',
                             msg: 'Succees to create user.'
                         });
@@ -82,52 +83,58 @@ router.post('/register/', (req, res, next) => {
 // @URL /users/login/
 // @FUNCTION 用户登录
 // @Code  0   成功登录
-//        -1  用户名或密码错误
-//        -2  数据库连接失败
-// @Cookie user   用户信息
-router.get('/login/:username/:password/', (req, res, next) => {
-    let userName = req.params.username;
-    let password = req.params.password;
-    pool.query(sql.getUser, [userName, password], function (err, result) {
-        if (err) {
-            console.log('[SELECT ERROR] - ', err.message);
-            res.json({
-                status: '-2',
-                msg: 'Failed to connect database on server.'
-            });
-        } else {
-            if (result.length > 0) {
-                res.cookie('user', result[0]);
-                res.json({
-                    status: '0',
-                    msg: 'Succees to login.',
-                    data: result[0]
-                });
-            } else {
+//        1  用户名或密码错误
+//        -1  数据库连接失败
+router.post('/login/', (req, res, next) => {
+        let userName = req.body.username;
+        let password = req.body.password;
+        // 验证用户名密码
+        pool.query(sql.getUser, [userName, password], function (err, result) {
+            if (err) {
+                console.log('[SELECT ERROR] - ', err.message);
                 res.json({
                     status: '-1',
-                    msg: 'Failed to login. Check your username and password.'
+                    msg: 'Failed to connect database on server.'
                 });
+            } else {
+                if (result.length > 0) {
+                    console.log(req.session.id);
+                    if(req.session.username) {
+                        res.json({
+                            status: '0',
+                            msg: '无需重复登录'
+                        });
+                    } else {
+                        // Session 记录登录状态
+                        req.session.username = userName;
+                        // 登录成功
+                        res.json({
+                            status: '0',
+                            msg: 'Succees to login.',
+                            token: req.session.id,
+                        });
+                    }
+                } else {
+                    res.json({
+                        status: '1',
+                        msg: 'User name or password error.'
+                    });
+                }
             }
-        }
-    });
+        })
 });
 
-// @URL /users/logout/
-// @FUNCTION 用户登出
-// @Code  0   成功登出
-//        -1  用户未登录
-router.get('/logout', (req, res, next) => {
-    if (req.cookies.user) {
-        res.clearCookie('user');
-        res.json({
+// 检查登录状态
+router.get('/checkLogin/', (req, res, next) => {
+    if(req.session.username) {
+        res.send({
             status: '0',
-            msg: 'Succees to logout.'
+            msg: '已登录'
         });
     } else {
-        res.json({
-            status: '-1',
-            msg: 'Failed to logout. You are not logged in.'
+        res.send({
+            status: '1',
+            msg: '未登录'
         });
     }
 });

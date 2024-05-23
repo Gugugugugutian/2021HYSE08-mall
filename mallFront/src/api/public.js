@@ -1,16 +1,17 @@
 import axios from 'axios'
-axios.defaults.timeout = 10000
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+
 // get 请求
 export function httpGet({
                             url,
                             params = {}
                         }) {
     console.log('[httpGet] url:' + url + ', params:' + params);
-    return new Promise((resolve, reject) => {
+    return  new Promise((resolve, reject) => {
         axios.get(url, {
             params
         }).then((res) => {
+            console.log('[httpGet] res: ');
+            console.log(res.data);
             resolve(res.data)
         }).catch(err => {
             reject(err)
@@ -30,6 +31,9 @@ export function httpPost({
         axios({
             url,
             method: 'post',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
             transformRequest: [function (data) {
                 let ret = ''
                 for (let it in data) {
@@ -37,6 +41,7 @@ export function httpPost({
                 }
                 return ret
             }],
+            withCredentials: true,
             // 发送的数据
             data,
             // url参数

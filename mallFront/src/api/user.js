@@ -37,3 +37,11 @@ export function checkLoginStatus () {
       params: {},
   })
 }
+
+// 用户登出
+export function userLogout () {
+  return httpGet({
+      url: '/api/users/logout/',
+      params: {},
+  })
+}

@@ -99,13 +99,13 @@ router.post('/login/', (req, res, next) => {
             } else {
                 if (result.length > 0) {
                     console.log(req.session.id);
-                    if(req.session.username) {
+                    if(req.session.username === userName) {
                         res.json({
                             status: '0',
                             msg: '无需重复登录'
                         });
                     } else {
-                        // Session 记录登录状态
+                        // Session 记录/更新登录状态
                         req.session.username = userName;
                         // 登录成功
                         res.json({
@@ -125,11 +125,14 @@ router.post('/login/', (req, res, next) => {
 });
 
 // 检查登录状态
+// @Code  0   已登录 同时返回用户名
+//        1   未登录
 router.get('/checkLogin/', (req, res, next) => {
     if(req.session.username) {
         res.send({
             status: '0',
-            msg: '已登录'
+            msg: '已登录',
+            username: req.session.username,
         });
     } else {
         res.send({
@@ -137,6 +140,16 @@ router.get('/checkLogin/', (req, res, next) => {
             msg: '未登录'
         });
     }
+});
+
+// 用户退出
+// @Code  0   成功退出
+router.get('/logout/', (req, res, next) => {
+    req.session.destroy();
+    res.send({
+        status: '0',
+        msg: '退出成功'
+    });
 });
 
 module.exports = router;

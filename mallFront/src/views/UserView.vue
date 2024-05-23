@@ -1,5 +1,5 @@
 <script>
-import {testConnection, userRegister, userLogin, checkLoginStatus } from "@/api/user.js";
+import { testConnection, userRegister, userLogin, checkLoginStatus, userLogout } from "@/api/user.js";
 export default {
   name: "UserView",
   methods: {
@@ -25,7 +25,6 @@ export default {
         throw err;
       });
     },
-
     // 用户登录
     login(username, password) {
       if(!username || !password) {
@@ -38,12 +37,21 @@ export default {
         })
       }
     },
+    // 检查登录状态
     checkLoginStatus() {
       checkLoginStatus().then(res => {
         this.response = res.msg ? res.msg : '出现未知错误';
       }).catch(err => {
         this.response = err;
         throw err;
+      });
+    },
+    // 用户登出
+    userLogout() {
+      userLogout().then(res => {
+        this.response = res.msg ? res.msg : '出现未知错误';
+      }).catch(err => {
+        this.response = err;
       });
     }
   },
@@ -76,8 +84,6 @@ export default {
       <input type="text" v-model="registerUser.username">
       <input type="text" v-model="registerUser.password">
       <button @click="register(registerUser.username, registerUser.password)">register</button>
-      {{ response }}
-      {{ csrf }}
     </div>
 
     <div>
@@ -89,7 +95,7 @@ export default {
     </div>
 
     <button @click="checkLoginStatus">Check</button>
-
+    <button @click="userLogout">Logout</button>
 
   </main>
 </template>

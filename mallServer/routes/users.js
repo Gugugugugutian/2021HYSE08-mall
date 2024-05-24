@@ -23,15 +23,13 @@ router.get('/', function (req, res, next) {
             if (err) {
                 console.log('[DB INITIALIZE ERROR] - ', err.message);
             } else {
-                res.json({
-                    status: '0',
+                res.status(200).json({
                     msg: 'Succees to connect database on server.'
                 });
             }
         });
     } else {
-        res.json({
-            status: '-1',
+        res.status(500).json({
             msg: 'Failed to connect database on server. '
         });
     }
@@ -50,26 +48,26 @@ router.post('/register/', (req, res, next) => {
     pool.query(sql.getUserByName, [userName], function (err, result) {
         if (err) {
             console.log('[SELECT ERROR] - ', err.message);
-            res.json({
-                status: '-1',
+            res.status(500).json({
+                code: '-1',
                 msg: 'Failed to connect database on server.'
             });
         } else {
             if (result.length > 0) {
-                res.json({
-                    status: '1',
+                res.status(406).json({
+                    code: '1',
                     msg: 'User name already exists.'
                 });
             } else {
                 pool.query(sql.createUser, [userName, password, false], function (err, result) {
                     if (err) {
                         console.log('[INSERT ERROR] - ', err.message);
-                        res.json({
-                            status: '-1',
+                        res.status(500).json({
+                            code: '-1',
                             msg: 'Failed to connect database on server.'
                         });
                     } else {
-                        res.json({
+                        res.status(200).json({
                             status: '0',
                             msg: 'Succees to create user.'
                         });
@@ -92,7 +90,7 @@ router.post('/login/', (req, res, next) => {
         pool.query(sql.getUser, [userName, password], function (err, result) {
             if (err) {
                 console.log('[SELECT ERROR] - ', err.message);
-                res.json({
+                res.status(500).json({
                     status: '-1',
                     msg: 'Failed to connect database on server.'
                 });
@@ -100,23 +98,23 @@ router.post('/login/', (req, res, next) => {
                 if (result.length > 0) {
                     console.log(req.session.id);
                     if(req.session.username === userName) {
-                        res.json({
-                            status: '0',
+                        res.status(200).json({
+                            code: '0',
                             msg: '无需重复登录'
                         });
                     } else {
                         // Session 记录/更新登录状态
                         req.session.username = userName;
                         // 登录成功
-                        res.json({
-                            status: '0',
+                        res.status(200).json({
+                            code: '0',
                             msg: 'Succees to login.',
                             token: req.session.id,
                         });
                     }
                 } else {
-                    res.json({
-                        status: '1',
+                    res.status(403).json({
+                        code: '1',
                         msg: 'User name or password error.'
                     });
                 }
@@ -129,14 +127,14 @@ router.post('/login/', (req, res, next) => {
 //        1   未登录
 router.get('/checkLogin/', (req, res, next) => {
     if(req.session.username) {
-        res.send({
-            status: '0',
+        res.status(200).send({
+            code: '0',
             msg: '已登录',
             username: req.session.username,
         });
     } else {
-        res.send({
-            status: '1',
+        res.status(404).json({
+            code: '1',
             msg: '未登录'
         });
     }
@@ -147,7 +145,7 @@ router.get('/checkLogin/', (req, res, next) => {
 router.get('/logout/', (req, res, next) => {
     req.session.destroy();
     res.send({
-        status: '0',
+        code: '0',
         msg: '退出成功'
     });
 });

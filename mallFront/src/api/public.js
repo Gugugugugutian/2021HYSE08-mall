@@ -10,8 +10,7 @@ export function httpGet({
         axios.get(url, {
             params
         }).then((res) => {
-            console.log('[httpGet] res: ');
-            console.log(res.data);
+            console.log('[httpGet] res: ' + res.data);
             resolve(res.data)
         }).catch(err => {
             reject(err)
@@ -48,8 +47,7 @@ export function httpPost({
             params
 
         }).then(res => {
-            console.log('[httpPost] res: ');
-            console.log(res.data);
+            console.log('[httpPost] res: ' + res.data);
             resolve(res.data);
         }).catch(err => {
             reject(err)

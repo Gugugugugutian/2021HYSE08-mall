@@ -31,10 +31,12 @@ export function userRegister (username, password) {
 }
 
 // 检查登录状态
-export function checkLoginStatus () {
+export function checkLoginStatus(username) {
   return httpGet({
       url: '/api/users/checkLogin/',
-      params: {},
+      params: {
+          username: username,
+      },
   })
 }
 

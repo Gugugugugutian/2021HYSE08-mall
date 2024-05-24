@@ -4,6 +4,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import axios from 'axios'
+import store from '@/store/index.js'
 
 // 必须写在挂载Vue 实例之前
 axios.defaults.timeout = 10000
@@ -13,6 +14,7 @@ axios.defaults.withCredentials = true;
 
 const app = createApp(App)
 
+app.use(store)
 app.use(router)
 
 app.mount('#app')

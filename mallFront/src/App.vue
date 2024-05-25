@@ -24,10 +24,11 @@ nav {
   text-align: center;
   margin-top: 2rem;
 }
-nav a.router-link-exact-active {
+
+nav a.router-link-active {
   color: var(--color-text);
 }
-nav a.router-link-exact-active:hover {
+nav a.router-link-active:hover {
   background-color: transparent;
 }
 </style>

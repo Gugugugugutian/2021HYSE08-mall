@@ -1,4 +1,5 @@
 <script>
+import { useRouter } from "vue-router";
 export default {
   name: "LoginView",
   methods: {
@@ -9,6 +10,10 @@ export default {
         password: this.password,
       }).then(res => {
         this.response = res ? res : 'Unknown Error';
+        // const r = useRouter();
+        // r.replace (
+        //     r.currentRoute.value.query.redirect ? { path: r.currentRoute.value.query.redirect } : { path: '/user' }
+        // );
       }).catch(err => {
         this.response = err;
         throw err;

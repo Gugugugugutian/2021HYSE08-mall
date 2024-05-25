@@ -9,6 +9,9 @@ var bodyParser = require('body-parser')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var goodsRouter = require('./routes/goods');
+var addressRouter = require('./routes/address');
+var orderRouter = require('./routes/order');
 var cors = require('cors');
 var corsOptions = {
   origin: 'http://127.0.0.1:5173',
@@ -21,7 +24,7 @@ app.all('*', function (req, res, next) {
   res.header('Access-Control-Allow-Origin', req.get("Origin"));
   res.header('Access-Control-Allow-Headers', 'credentials,Content-Type, Content-Length, Authorization, Accept, X-Requested-With, token');
   res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-  //若要返回cookie、携带 session 等信息则将此项设为true。此时Access-Control-Allow-Origin不能设置为*
+  // 若要返回cookie、携带 session 等信息则将此项设为true。此时Access-Control-Allow-Origin不能设置为*
   res.header("Access-Control-Allow-Credentials", "true");
   next();
 });
@@ -46,21 +49,12 @@ app.use(session({
 }))
 app.use(cors(corsOptions));
 
-// // 数据库连接
-// var mysql = require('mysql2');
-// var dbConfig = require('./database/db');
-// var pool = mysql.createPool(dbConfig.mysql);
-// // SQL语句
-// var sql = {
-//   createTable: 'CREATE TABLE IF NOT EXISTS users(id INT NOT NULL AUTO_INCREMENT,username VARCHAR(20) NOT NULL, password VARCHAR(20) NOT NULL, isAdmin BOOLEAN NOT NULL, PRIMARY KEY (id));',
-//   createUser: 'INSERT INTO users(username, password, isAdmin) VALUES (?, ?, ?);',
-//   getUser: 'SELECT * FROM users WHERE username = ? AND password = ?;',
-//   getUserByName: 'SELECT * FROM users WHERE username = ?;'
-// }
-
-// Index
+// Router
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/goods', goodsRouter);
+app.use('/address', addressRouter);
+app.use('/orders', orderRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

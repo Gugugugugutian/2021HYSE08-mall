@@ -7,9 +7,19 @@ var pool = mysql.createPool(dbConfig.mysql);
 
 // SQL语句
 var sql = {
-    createTable: 'CREATE TABLE IF NOT EXISTS users(id INT NOT NULL AUTO_INCREMENT,username VARCHAR(20) NOT NULL, password VARCHAR(20) NOT NULL, isAdmin BOOLEAN NOT NULL, PRIMARY KEY (id));',
+    // 创建用户表
+    createTable:
+        'CREATE TABLE IF NOT EXISTS users(' +
+        'id INT NOT NULL AUTO_INCREMENT,' +
+        'username VARCHAR(20) NOT NULL, ' +
+        'password VARCHAR(20) NOT NULL, ' +
+        'isAdmin BOOLEAN NOT NULL, ' +
+        'PRIMARY KEY (id));',
+    // 创建用户
     createUser: 'INSERT INTO users(username, password, isAdmin) VALUES (?, ?, ?);',
+    // 获取用户（根据用户名和密码）
     getUser: 'SELECT * FROM users WHERE username = ? AND password = ?;',
+    // 获取用户（根据用户名）
     getUserByName: 'SELECT * FROM users WHERE username = ?;'
 }
 

@@ -99,16 +99,6 @@ main {
   color: #2c3e50;
 }
 
-nav {
-  margin-bottom: 20px;
-}
-
-nav a {
-  margin: 0 15px;
-  color: #4CAF50;
-  text-decoration: none;
-}
-
 .order-history {
   text-align: left;
   margin: 0 auto;

@@ -98,16 +98,6 @@ main {
   color: #2c3e50;
 }
 
-nav {
-  margin-bottom: 20px;
-}
-
-nav a {
-  margin: 0 15px;
-  color: #4CAF50;
-  text-decoration: none;
-}
-
 .user-info {
   margin-bottom: 20px;
 }

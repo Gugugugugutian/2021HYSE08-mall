@@ -35,6 +35,7 @@ const router = createRouter({
       path: '/user',
       name: 'user',
       component: () => import('../views/UserView.vue'),
+      redirect: '/user/login',
       children: [
           {
             path: 'login',
@@ -47,7 +48,8 @@ const router = createRouter({
           }, {
             path: 'order',
             name: 'order',
-            component: () => import('../views/OrderView.vue')
+            component: () => import('../views/OrderView.vue'),
+
           }, {
             path: 'address',
             name: 'address',

@@ -9,12 +9,18 @@ export default {
         username: '',
         password: '',
       },
+      termAccepted: false,
+      response: '',
     };
   },
   methods: {
-    register(username, password) {
-      if(!username || !password) {
+    register() {
+      if(!this.registerUser.username || !this.registerUser.password) {
         this.response = '用户名或密码不能为空';
+        return;
+      }
+      if(!this.termAccepted) {
+        this.response = '请先同意用户注册协议';
         return;
       }
       userRegister(this.registerUser.username, this.registerUser.password).then(res => {
@@ -36,34 +42,28 @@ export default {
 
 <template>
   <main>
-    This is the 用户注册 page.
-    这部分register(username, password)函数功能不知道是否正确
+<!--    This is the 用户注册 page.-->
+<!--    这部分register(username, password)函数功能不知道是否正确-->
 
     <div class="register-view">
 
       <div class="register-form">
-        <h2>注册 | 登录</h2>
+        <h2 style="text-align: center">
+          <router-link to="/user/login">登录</router-link> | <router-link to="/user/register">注册</router-link>
+        </h2>
         <h3>用户注册</h3>
-        <input type="text" v-model="username" placeholder="用户名" />
-        <input type="text" v-model="password" placeholder="密码" />
+        <input type="text" v-model="registerUser.username" placeholder="用户名" />
+        <input type="text" v-model="registerUser.password" placeholder="密码" />
         <button @click="register()">注册</button>
 
-<!--        <input type="text" v-model="registerUser.username" placeholder="用户名" />
-        <input type="text" v-model="registerUser.password" placeholder="密码" />
-        <button @click="register(registerUser.username,registerUser.password)">注册</button>-->
-
-
         <div class="terms">
-          <input type="checkbox" v-model="termsAccepted" />
-          <label>已阅读并同意以下协议</label>
-          <div>
-            <a href="#">服务协议</a>、<a href="#">隐私政策</a>、
-            <a href="#">法律声明</a>、<a href="#">支付协议</a>、
-            <a href="#">客户服务协议</a>
-          </div>
+          <span>
+            <input id="11111" type="checkbox" v-model="termAccepted" />
+            <label for="11111">已阅读并同意：所有交易过程均为模拟，仅供学习交流，不代表实际交付约定。</label>
+          </span>
+          {{ response }}
         </div>
       </div>
-
     </div>
 
   </main>
@@ -71,6 +71,9 @@ export default {
 
 
 <style>
+.terms input, label {
+  display: inline;
+}
 .register-view {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
@@ -102,13 +105,15 @@ header nav a {
   padding: 20px;
   border-radius: 8px;
   background-color: #f9f9f9;
+  width: 100%;
+  max-width: 600px;
 }
 
 .register-form h2, .register-form h3 {
   margin: 0 0 20px 0;
 }
 
-.register-form input {
+.register-form input[type='text'] {
   display: block;
   width: 100%;
   padding: 10px;
@@ -124,7 +129,7 @@ header nav a {
   margin: 20px 0;
   border: none;
   border-radius: 4px;
-  background-color: #FF8000;
+  background-color: green;
   color: white;
   font-size: 16px;
 }

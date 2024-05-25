@@ -25,14 +25,14 @@ const store = createStore({
             console.log('登出成功');
         }
     },
-    // getters: {
-    //     isLogin(state) {
-    //         return state.isLogin;
-    //     },
-    //     username(state) {
-    //         return state.username;
-    //     },
-    // },
+    getters: {
+        isLogin(state) {
+            return state.isLogin;
+        },
+        username(state) {
+            return state.username;
+        },
+    },
     actions: {
         // 用户登录
         userLogin({commit}, arg) {

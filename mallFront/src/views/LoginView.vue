@@ -3,7 +3,7 @@ export default {
   name: "LoginView",
   methods: {
     // 用户登录
-    login(username, password) {
+    login() {
       this.$store.dispatch('userLogin', {
         username: this.username,
         password: this.password,
@@ -19,6 +19,7 @@ export default {
     return {
       username: '',
       password: '',
+      response: '',
     };
   },
 };
@@ -27,20 +28,16 @@ export default {
 <template>
   <div class="login-view">
     <main>
-      This is the 用户登录 page.
-
-      test_sun
       <div class="login-form">
-        <h2>注册 | 登录</h2>
+        <h2 style="text-align: center">
+          <router-link to="/user/login">登录</router-link> | <router-link to="/user/register">注册</router-link>
+        </h2>
         <h3>你好，请登录</h3>
         <input type="text" v-model="username" placeholder="用户名" />
         <input type="text" v-model="password" placeholder="密码" />
-        <button @click="login(username,password)">登录</button>
+        <button @click="login()">登录</button>
         <div class="links">
-          界面跳转可能需要靠前端
-          <router-link to="/register">免费注册</router-link>
-          <a href="#">忘记账号</a>
-          <a href="#">忘记密码</a>
+          {{ response }}
         </div>
       </div>
     </main>
@@ -83,6 +80,8 @@ header nav a {
   padding: 20px;
   border-radius: 8px;
   background-color: #f9f9f9;
+  width: 100%;
+  max-width: 600px;
 }
 
 .login-form h2, .login-form h3 {
@@ -105,7 +104,7 @@ header nav a {
   margin: 20px 0;
   border: none;
   border-radius: 4px;
-  background-color: #FF8000;
+  background-color: green;
   color: white;
   font-size: 16px;
 }

@@ -1,9 +1,6 @@
 <script>
 export default {
   name: "UserView",
-  methods: {
-
-  },
   computed: {
     isLogin() {
       return this.$store.state.isLogin;

@@ -35,20 +35,22 @@ var sql = {
     },
     // 根据关键字搜索商品
     searchGoods: 'SELECT * FROM goods WHERE name LIKE ?',
+    // 分页获取商品
+    getGoodsByPage: 'SELECT * FROM goods LIMIT ?, ?',
 }
 
 // 创建商品表
-router.get('/createGoodsTable', function (req, res, next) {
+router.get('/createTable', function (req, res, next) {
     pool.getConnection(function (err, connection) {
         connection.query(sql.createGoodsTable, function (err, result) {
             if (err) {
                 console.log(err.message);
-                res.send({
+                res.status(500).send({
                     code: 1,
                     msg: '创建商品表失败'
                 })
             } else {
-                res.send({
+                res.status(200).send({
                     code: 0,
                     msg: '创建商品表成功'
                 });
@@ -57,6 +59,27 @@ router.get('/createGoodsTable', function (req, res, next) {
     });
 });
 
+// 获取所有商品
+router.get('/getAll', function (req, res, next) {
+    pool.getConnection(function (err, connection) {
+        connection.query(sql.selectGoods, function (err, result) {
+            if (err) {
+                console.log(err.message);
+                res.status(500).send({
+                    code: 1,
+                    msg: '获取商品失败'
+                })
+            } else {
+                res.status(200).send({
+                    code: 0,
+                    msg: '获取商品成功',
+                    data: result
+                });
+            }
+        });
+    });
+});
 
+//
 
 module.exports = router;

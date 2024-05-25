@@ -10,6 +10,7 @@ export default {
         password: '',
       },
       termAccepted: false,
+      term1Accepted: false,
       response: '',
     };
   },
@@ -19,12 +20,12 @@ export default {
         this.response = '用户名或密码不能为空';
         return;
       }
-      if(!this.termAccepted) {
+      if(!this.termAccepted || !this.term1Accepted) {
         this.response = '请先同意用户注册协议';
         return;
       }
       userRegister(this.registerUser.username, this.registerUser.password).then(res => {
-        this.response = res;
+        this.response = '注册成功';
       }).catch(err => {
         if(err.code === 'ERR_BAD_REQUEST') {
           this.response = '用户名已存在';
@@ -60,6 +61,8 @@ export default {
           <span>
             <input id="11111" type="checkbox" v-model="termAccepted" />
             <label for="11111">已阅读并同意：所有交易过程均为模拟，仅供学习交流，不代表实际交付约定。</label>
+            <input id="11112" type="checkbox" v-model="term1Accepted" />
+            <label for="11112">我已知晓：用户名确认后不能更改。</label>
           </span>
           {{ response }}
         </div>

@@ -70,15 +70,15 @@ const store = createStore({
             return new Promise((resolve, reject) => {
                 checkLoginStatus(store.state.username).then(res => {
                     // 登录状态检查成功
-                    if(res.username === store.state.username) resolve('登录状态正确');
+                    if(res.username === store.state.username) resolve(0);
                     else {
                         dispatch('userLogout');
-                        resolve('已登录，但用户不对，已自动退出');
+                        reject(1);
                     }
                 }).catch(err => {
                     // 登录状态检查失败，自动退出
                     dispatch('userLogout');
-                    reject('登录状态错误，已自动退出');
+                    reject(1);
                 })
             });
         }

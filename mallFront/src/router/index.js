@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import store from '../store/index.js'
 import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
@@ -44,20 +45,54 @@ const router = createRouter({
           }, {
             path: 'register',
             name: 'register',
-            component: () => import('../views/RegisterView.vue')
+            component: () => import('../views/RegisterView.vue'),
           }, {
             path: 'order',
             name: 'order',
             component: () => import('../views/OrderView.vue'),
-
+            meta: {
+              requireAuth: true
+            },
           }, {
             path: 'address',
             name: 'address',
-            component: () => import('../views/AddressView.vue')
+            component: () => import('../views/AddressView.vue'),
+            meta: {
+              requireAuth: true
+            },
           },
       ],
     }
   ]
+})
+
+// 需要登录的路由，如果未登录，跳转到登录页面
+router.beforeEach((to, from, next) => {
+  if (to.meta.requireAuth && to.meta.requireAuth === true) {
+    if (store.getters.isLogin===true) {
+      // 二次检查登录状态
+      store.dispatch('userCheckLoginStatus', store.getters.username).then(res => {
+        if(res===0) {
+          next();
+        } else {
+          next(/*跳转登录*/ {
+            path: '/user/login',
+            query: {
+              redirect: to.fullPath
+            }
+          })
+        }
+      })
+    }
+    else next(/*跳转登录*/ {
+      path: '/user/login',
+      query: {
+        redirect: to.fullPath
+      }
+    })
+  } else {
+    next()
+  }
 })
 
 export default router

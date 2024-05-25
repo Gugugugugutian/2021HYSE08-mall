@@ -14,6 +14,23 @@ export default {
         throw err;
       });
     },
+    // 用户登出
+    logout() {
+      return this.$store.dispatch('userLogout').then(res => {
+        this.response = res ? res : 'Unknown Error';
+      }).catch(err => {
+        this.response = err;
+        throw err;
+      });
+    },
+  },
+  computed: {
+    isLogin() {
+      return this.$store.state.isLogin;
+    },
+    curUsername() {
+      return this.$store.state.username;
+    },
   },
   data() {
     return {
@@ -29,15 +46,24 @@ export default {
   <div class="login-view">
     <main>
       <div class="login-form">
-        <h2 style="text-align: center">
+        <h2 style="text-align: center" v-if="!isLogin">
           <router-link to="/user/login">登录</router-link> | <router-link to="/user/register">注册</router-link>
         </h2>
-        <h3>你好，请登录</h3>
-        <input type="text" v-model="username" placeholder="用户名" />
-        <input type="text" v-model="password" placeholder="密码" />
-        <button @click="login()">登录</button>
-        <div class="links">
-          {{ response }}
+        <h2 style="text-align: center" v-else>
+          已登录
+        </h2>
+        <div v-if="!isLogin">
+          <h3>你好，请登录</h3>
+          <input type="text" v-model="username" placeholder="用户名" />
+          <input type="text" v-model="password" placeholder="密码" />
+          <button @click="login()">登录</button>
+          <div class="links">
+            {{ response }}
+          </div>
+        </div>
+        <div v-else>
+          <h3>你好，{{ curUsername }}</h3>
+          <button @click="logout()">退出</button>
         </div>
       </div>
     </main>

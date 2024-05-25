@@ -1,7 +1,22 @@
 <script>
 import { useRouter } from "vue-router";
+import router from "@/router/index.js";
 export default {
   name: "LoginView",
+  data() {
+    return {
+      username: '',
+      password: '',
+      response: '',
+      // 登录后，重定向到这个链接
+      redirect: '/',
+    };
+  },
+  mounted() {
+    const router = useRouter();
+    this.redirect = router.currentRoute.value.query.redirect ? router.currentRoute.value.query.redirect : '/user';
+    console.log(this.redirect);
+  },
   methods: {
     // 用户登录
     login() {
@@ -10,10 +25,7 @@ export default {
         password: this.password,
       }).then(res => {
         this.response = res ? res : 'Unknown Error';
-        // const r = useRouter();
-        // r.replace (
-        //     r.currentRoute.value.query.redirect ? { path: r.currentRoute.value.query.redirect } : { path: '/user' }
-        // );
+        router.replace(this.redirect);
       }).catch(err => {
         this.response = err;
         throw err;
@@ -36,13 +48,6 @@ export default {
     curUsername() {
       return this.$store.state.username;
     },
-  },
-  data() {
-    return {
-      username: '',
-      password: '',
-      response: '',
-    };
   },
 };
 </script>

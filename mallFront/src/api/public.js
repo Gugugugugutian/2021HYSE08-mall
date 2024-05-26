@@ -7,8 +7,11 @@ export function httpGet({
                         }) {
     console.log('[httpGet] url:' + url + ', params:' + params);
     return  new Promise((resolve, reject) => {
-        axios.get(url, {
-            params
+        axios({
+            url,
+            method: 'get',
+            params,
+            withCredentials: true,
         }).then((res) => {
             console.log('[httpGet] res: ' + res.data);
             resolve(res.data)

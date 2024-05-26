@@ -119,7 +119,7 @@ router.post('/login/', (req, res, next) => {
                         res.status(200).json({
                             code: '0',
                             msg: 'Succees to login.',
-                            token: req.session.id,
+                            // sid: req.session.id,
                         });
                     }
                 } else {
@@ -140,10 +140,10 @@ router.get('/checkLogin/', (req, res, next) => {
         res.status(200).send({
             code: '0',
             msg: '已登录',
-            username: req.session.username,
+            username: req.session.username
         });
     } else {
-        res.status(404).json({
+        res.status(401).json({
             code: '1',
             msg: '未登录'
         });

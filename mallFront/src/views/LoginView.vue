@@ -9,7 +9,7 @@ export default {
       password: '',
       response: '',
       // 登录后，重定向到这个链接
-      redirect: '/',
+      redirect: undefined,
     };
   },
   mounted() {
@@ -25,7 +25,7 @@ export default {
         password: this.password,
       }).then(res => {
         this.response = res ? res : 'Unknown Error';
-        router.replace(this.redirect);
+        router.go(0);
       }).catch(err => {
         this.response = err;
         throw err;
@@ -35,18 +35,23 @@ export default {
     logout() {
       return this.$store.dispatch('userLogout').then(res => {
         this.response = res ? res : 'Unknown Error';
+      }).then(()=> {
+        console.log('a');
       }).catch(err => {
         this.response = err;
         throw err;
       });
     },
+    goBack() {
+      router.push(this.redirect);
+    },
   },
   computed: {
     isLogin() {
-      return this.$store.state.isLogin;
+      return !!this.$store.getters.username;
     },
     curUsername() {
-      return this.$store.state.username;
+      return this.$store.getters.username;
     },
   },
 };
@@ -73,6 +78,7 @@ export default {
         </div>
         <div v-else>
           <h3>你好，{{ curUsername }}</h3>
+          <button v-if="redirect!=='/user'" @click="goBack()">继续查看登录前的页面</button>
           <button @click="logout()">退出</button>
         </div>
       </div>

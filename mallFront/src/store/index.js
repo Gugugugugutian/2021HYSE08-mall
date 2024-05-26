@@ -2,10 +2,9 @@ import { userLogin, checkLoginStatus, userLogout } from "@/api/user.js";
 import { createStore } from 'vuex'
 const store = createStore({
     state: {
-        // 用户状态
-        isLogin: false,
-        username: '',
-        sessionId: '',
+        // 用户信息
+        // 请从本地缓存中获取 localStorage.getItem('username')
+        // 或者使用Getter: this.$store.getters.username
         // 购物车
         cart: [],
         // goods
@@ -26,25 +25,21 @@ const store = createStore({
     mutations: {
         // username 用户登录时更新state
         onLogin (state, arg) {
-            state.isLogin = true;
-            state.username = arg.username;
-            state.sessionId = arg.sessionId;
+            localStorage.setItem('username', arg.username);
             console.log('登录成功: ' + state.username);
         },
         // username 用户退出时更新state
         onLogout (state) {
-            state.isLogin = false;
-            state.username = '';
-            state.sessionId = '';
+            localStorage.removeItem('username');
             console.log('登出成功');
         }
     },
     getters: {
-        isLogin(state) {
-            return state.isLogin;
+        isLogin() {
+            return localStorage.isLogin;
         },
-        username(state) {
-            return state.username;
+        username() {
+            return localStorage.username;
         },
     },
     actions: {
@@ -82,17 +77,17 @@ const store = createStore({
         // 用户登录状态二次检查
         userCheckLoginStatus({dispatch}) {
             return new Promise((resolve, reject) => {
-                checkLoginStatus(store.state.username).then(res => {
+                checkLoginStatus(store.getters.username).then(res => {
                     // 登录状态检查成功
-                    if(res.username === store.state.username) resolve(0);
+                    if(res.username === store.getters.username) resolve(0);
                     else {
                         dispatch('userLogout');
-                        reject(1);
+                        reject('登录失效，请重新登录');
                     }
                 }).catch(err => {
                     // 登录状态检查失败，自动退出
                     dispatch('userLogout');
-                    reject(1);
+                    reject('未登录');
                 })
             });
         }

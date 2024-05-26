@@ -70,7 +70,7 @@ const router = createRouter({
 // 需要登录的路由，如果未登录，跳转到登录页面
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth && to.meta.requireAuth === true) {
-    if (store.getters.isLogin===true) {
+    if (!!store.getters.username) {
       // 二次检查登录状态
       store.dispatch('userCheckLoginStatus', store.getters.username).then(res => {
         if(res===0) {

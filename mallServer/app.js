@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var session = require("express-session");
+// var sessionStore = require("./util/sessionStore");
 
 var logger = require('morgan');
 var bodyParser = require('body-parser')
@@ -22,7 +23,7 @@ var app = express();
 
 app.all('*', function (req, res, next) {
   res.header('Access-Control-Allow-Origin', req.get("Origin"));
-  res.header('Access-Control-Allow-Headers', 'credentials,Content-Type, Content-Length, Authorization, Accept, X-Requested-With, token');
+  res.header('Access-Control-Allow-Headers', 'credentials, Content-Type, Content-Length, Authorization, Accept, X-Requested-With, token');
   res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
   // 若要返回cookie、携带 session 等信息则将此项设为true。此时Access-Control-Allow-Origin不能设置为*
   res.header("Access-Control-Allow-Credentials", "true");
@@ -43,9 +44,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({
   secret: '2021homework',
+  name: 'sessionId',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false, originalMaxAge: 3600000 }
+  cookie: { secure: false, maxAge: 600000 },
 }))
 app.use(cors(corsOptions));
 

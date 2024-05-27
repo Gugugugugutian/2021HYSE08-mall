@@ -14,7 +14,7 @@ const router = createRouter({
       // 购物车页，包括确认订单，模拟支付2个子页面
       path: '/cart',
       name: 'cart',
-      component: () => import('../views/CartView.vue'),
+      component: () => import('../views/CartNaviView.vue'),
       children: [
         {
           path: 'confirm',
@@ -24,6 +24,10 @@ const router = createRouter({
           path: 'pay',
           name: 'pay',
           component: () => import('../views/PayView.vue')
+        }, {
+          path: 'cart',
+          name: 'cart',
+          component: () => import('../views/CartView.vue'),
         }
       ]
     }, {

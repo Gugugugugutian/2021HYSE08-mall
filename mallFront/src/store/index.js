@@ -27,6 +27,12 @@ const store = createStore({
             'https://imgcps.jd.com/img-cubic/creative_server_cia_jdcloud/v2/2000366/100010511786/FocusFullshop/CkRqZnMvdDEvMjAwMTE5LzE1LzQzNDE3Lzc2NzYzNi82NjRhNTA0MkZhOWNhODExNi9kMmYyOWY5YzQ1YTEwMjQ0LnBuZxIJMy10eV8wXzU0MAI47ot6Qh8KG-e-jue0oOS9s-WEv-WptOW5vOWEv-WltueyiRABQhMKD-S9oOWAvOW-l-aLpeaciRACQhAKDOeri-WNs-aKoui0rRAGQgoKBuS8mOmAiRAHWKqb3cj0Ag/cr/s/q.jpg',
             'https://imgcps.jd.com/img-cubic/creative_server_cia_jdcloud/v2/2000318/100027956045/FocusFullshop/CkJqZnMvdDEvMjE2NDYzLzgvNDE1OTcvNDYyNjgvNjY0YTUxNzZGYjc5ZGJkN2IvYzAzMjI3ODMxMTA5ZDg0MS5wbmcSCTMtdHlfMF81NDACOL6LekIcChjpq5jlsJTlpKvlpbPlo6vlj4zogqnljIUQAUIQCgzpnIfmkrzmnaXkuLQQAkIQCgznq4vljbPmiqLotK0QBkIKCgbkvJjpgIkQB1jN9oXR9AI/cr/s/q.jpg'
         ],
+        //热销商品
+        hotProducts:[
+            { id: 1, name: '热销商品A', price: 100, image: 'https://img13.360buyimg.com/jdcms/s460x460_jfs/t1/227922/7/13824/61489/65db59c0Fbb4c1572/075adffbfa8abe99.jpg.avif', description: '热销商品1描述' },
+            { id: 2, name: '热销商品B', price: 150, image: 'https://img13.360buyimg.com/jdcms/s460x460_jfs/t1/227922/7/13824/61489/65db59c0Fbb4c1572/075adffbfa8abe99.jpg.avif', description: '热销商品2描述为VEBU夫GIEINVURVN i文革后期二婚OVWVBUWE i v你QEUVI巫女哦亲' },
+            // ... more products
+        ],
     },
     mutations: {
         // username 用户登录时更新state

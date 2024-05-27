@@ -128,6 +128,7 @@ export default {
 */
 .product:hover {
   transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* 鼠标悬停时的阴影效果 */
 }
 
 .product img {
@@ -136,9 +137,9 @@ export default {
   border-radius: 4px;
 }
 
-.product p {
+/*.product p {
   margin: 5px 0;
-}
+}*/
 
 /*@media (max-width: 1024px) {
   .product {

@@ -3,13 +3,21 @@
     <div class="top-section">
       <div class="left-block">
         <div class="carousel">
+          <!-- 左箭头按钮 -->
+          <button class="carousel-arrow left-arrow" v-if="currentImageIndex > 0" @click="prevSlide">&#9664;</button>
           <img v-for="(image, index) in this.$store.state.images" :src="image" :key="index" :class="{ active: currentImageIndex === index }">
+          <!-- 右箭头按钮 -->
+          <button class="carousel-arrow right-arrow" v-if="currentImageIndex < this.$store.state.images.length - 1" @click="nextSlide">&#9654;</button>
+          <div class="indicators">
+            <span v-for="(image, index) in this.$store.state.images" :key="index" :class="{ active: currentImageIndex === index }" @click="goToSlide(index)"></span>
+          </div>
         </div>
+
       </div>
       <div class="right-block">
         <h2>最近热销商品</h2>
         <ul>
-          <li v-for="product in hotProducts" :key="product.id">
+          <li v-for="product in this.$store.state.hotProducts" :key="product.id">
             <a @click="showDetail(product)">{{ product.name }}</a>
           </li>
         </ul>
@@ -19,7 +27,7 @@
       <div v-for="product in displayedProducts" :key="product.id" class="product" @click="showDetail(product)">
         <img :src="product.image" alt="Product Image">
         <p>{{ product.name }}</p>
-        <p>{{ product.price }} 元</p>
+        <p>￥{{ product.price }} </p>
       </div>
       <i class="product" style="height: 0; visibility: hidden; padding: 0"></i>
       <i class="product" style="height: 0; visibility: hidden; padding: 0"></i>
@@ -49,18 +57,9 @@ export default {
     }
   },
   created() {
-    this.fetchHotProducts();
     this.startCarousel();
   },
   methods: {
-    fetchHotProducts() {
-      // Fetch hot products from backend and update hotProducts
-      this.hotProducts = [
-        { id: 1, name: '热销商品1', price: 100, image: 'https://img13.360buyimg.com/jdcms/s460x460_jfs/t1/227922/7/13824/61489/65db59c0Fbb4c1572/075adffbfa8abe99.jpg.avif', description: '热销商品1描述' },
-        { id: 2, name: '热销商品2', price: 150, image: 'https://img13.360buyimg.com/jdcms/s460x460_jfs/t1/227922/7/13824/61489/65db59c0Fbb4c1572/075adffbfa8abe99.jpg.avif', description: '热销商品2描述为VEBU夫GIEINVURVN i文革后期二婚OVWVBUWE i v你QEUVI巫女哦亲' },
-        // ... more products
-      ];
-    },
     startCarousel() {
       setInterval(() => {
         this.currentImageIndex = (this.currentImageIndex + 1) % this.$store.state.images.length;
@@ -68,6 +67,19 @@ export default {
     },
     showDetail(product) {
       this.selectedProduct = product;
+    },
+    goToSlide(index) {
+      this.currentImageIndex = index;
+    },
+    prevSlide() {
+      if (this.currentImageIndex > 0) {
+        this.currentImageIndex--;
+      }
+    },
+    nextSlide() {
+      if (this.currentImageIndex < this.$store.state.images.length - 1) {
+        this.currentImageIndex++;
+      }
     }
   }
 };
@@ -124,6 +136,28 @@ export default {
   display: block;
 }
 
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.carousel-arrow.left-arrow {
+  left: 10px;
+}
+
+.carousel-arrow.right-arrow {
+  right: 10px;
+}
+
 .bottom-section {
   display: flex;
   flex-wrap: wrap;
@@ -155,11 +189,32 @@ export default {
   border-radius: 4px;
 }
 
-.product p {
+/*.product p {
   margin: 5px 0;
+}*/
+
+.indicators {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-@media (max-width: 1024px) {
+.indicators span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ccc;
+  display: inline-block;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.indicators span.active {
+  background-color: #007bff;
+}
+
+/*@media (max-width: 1024px) {
   .product {
     width: calc(25% - 20px);
   }
@@ -175,5 +230,5 @@ export default {
   .product {
     width: calc(50% - 20px);
   }
-}
+}*/
 </style>

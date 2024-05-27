@@ -4,7 +4,7 @@ const store = createStore({
     state: {
         // 用户信息
         // 请从本地缓存中获取 localStorage.getItem('username')
-        // 或者使用Getter: this.$store.getters.username
+        // 或者使用 Getter: this.$store.getters.username
         // 购物车
         cart: [],
         // goods

@@ -1,6 +1,18 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 </script>
+<script>
+export default {
+  methods: {
+    checkLogin(){
+      this.$store.dispatch('userCheckLoginStatus');
+    }
+  },
+  mounted() {
+    this.checkLogin();
+  }
+}
+</script>
 
 <template>
   <h1 style="text-align: center">线上商城</h1>

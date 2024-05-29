@@ -15,6 +15,7 @@ const router = createRouter({
       path: '/cart',
       name: 'cart',
       component: () => import('../views/CartNaviView.vue'),
+      redirect: '/cart/cart',
       children: [
         {
           path: 'confirm',

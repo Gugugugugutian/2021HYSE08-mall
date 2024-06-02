@@ -139,6 +139,7 @@ router.get('/query', function (req, res, next) {
 
 // 根据订单id查询订单明细
 // url: /orders/queryitem
+// params: orderId
 router.get('/queryitem', function (req, res, next) {
     const orderId = req.query.orderId;
     getOrderItem(orderId).then((result) => {

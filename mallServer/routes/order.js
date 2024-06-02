@@ -15,7 +15,7 @@ var sql = {
         'total varchar(20),' +          // 订单总价
         'address varchar(100),' +       // 地址
         'orderTime varchar(20),' +      // 下单时间
-        'completionTime varchar(20)' + // 付款时间
+        'completionTime varchar(20)' +  // 付款时间
         ')',
     // 创建订单明细表
     createOrderItemTable:
@@ -23,7 +23,7 @@ var sql = {
         'orderId int not null, ' +      // 订单id
         'name varchar(20),' +           // 商品名称
         'quantity int,' +               // 商品数量
-        'price varchar(20)'+           // 商品最终价格
+        'price varchar(20)'+            // 商品最终价格
         ')',
     // 创建订单
     createOrder:

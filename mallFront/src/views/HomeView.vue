@@ -2,25 +2,11 @@
   <main class="home-view">
     <div class="top-section">
       <div class="left-block">
-        <div class="carousel">
-          <!-- 左箭头按钮 -->
-          <button class="carousel-arrow left-arrow" v-if="currentImageIndex > 0" @click="prevSlide">&#9664;</button>
-          <img v-for="(image, index) in this.$store.state.images" :src="image" :key="index" :class="{ active: currentImageIndex === index }">
-          <!-- 右箭头按钮 -->
-          <button class="carousel-arrow right-arrow" v-if="currentImageIndex < this.$store.state.images.length - 1" @click="nextSlide">&#9654;</button>
-          <div class="indicators">
-            <span v-for="(image, index) in this.$store.state.images" :key="index" :class="{ active: currentImageIndex === index }" @click="goToSlide(index)"></span>
-          </div>
-        </div>
-
-      </div>
-      <div class="right-block">
-        <h2>最近热销商品</h2>
-        <ul>
-          <li v-for="product in this.$store.state.hotProducts" :key="product.id">
-            <a @click="showDetail(product)">{{ product.name }}</a>
-          </li>
-        </ul>
+        <el-carousel height="450px">
+          <el-carousel-item v-for="item in images" :key="item.id">
+            <img :src="item.image" alt="" style="width: 100%; position: relative; bottom: 50%;">
+          </el-carousel-item>
+        </el-carousel>
       </div>
     </div>
     <div class="bottom-section">
@@ -46,6 +32,21 @@ export default {
   components: { Detail },
   data() {
     return {
+      images: [
+        {
+          id: 1,
+          image: 'https://imgcps.jd.com/img-cubic/creative_server_cia_jdcloud/v2/2000366/100006849854/FocusFullshop/CkJqZnMvdDEvMjM5NTA4LzQvOTU1Ni8xMzY5MzgvNjY0YTUwMjJGMjU4ODNmM2EvN2Q5OTg2ODE5ODMzZDg3Yy5wbmcSCTEtdHlfMF81MjACOO6LekITCg_lqIHmiIjnlLXohJHljIUQAUITCg_kvJjmg6DkuqvkuI3lgZwQAkIQCgznq4vljbPmiqLotK0QBkIKCgbnsr7pgIkQB1i-2v3G9AI/cr/s/q.jpg'
+        },
+        {
+          id: 2,
+          image: 'https://imgcps.jd.com/img-cubic/creative_server_cia_jdcloud/v2/2000366/100010511786/FocusFullshop/CkRqZnMvdDEvMjAwMTE5LzE1LzQzNDE3Lzc2NzYzNi82NjRhNTA0MkZhOWNhODExNi9kMmYyOWY5YzQ1YTEwMjQ0LnBuZxIJMy10eV8wXzU0MAI47ot6Qh8KG-e-jue0oOS9s-WEv-WptOW5vOWEv-WltueyiRABQhMKD-S9oOWAvOW-l-aLpeaciRACQhAKDOeri-WNs-aKoui0rRAGQgoKBuS8mOmAiRAHWKqb3cj0Ag/cr/s/q.jpg'
+        },
+        {
+          id: 3,
+          image: 'https://imgcps.jd.com/img-cubic/creative_server_cia_jdcloud/v2/2000318/100027956045/FocusFullshop/CkJqZnMvdDEvMjE2NDYzLzgvNDE1OTcvNDYyNjgvNjY0YTUxNzZGYjc5ZGJkN2IvYzAzMjI3ODMxMTA5ZDg0MS5wbmcSCTMtdHlfMF81NDACOL6LekIcChjpq5jlsJTlpKvlpbPlo6vlj4zogqnljIUQAUIQCgzpnIfmkrzmnaXkuLQQAkIQCgznq4vljbPmiqLotK0QBkIKCgbkvJjpgIkQB1jN9oXR9AI/cr/s/q.jpg'
+        },
+      ],
+
       currentImageIndex: 0,
       hotProducts: [],
       selectedProduct: null
@@ -56,31 +57,11 @@ export default {
       return this.$store.state.allProducts;
     }
   },
-  created() {
-    this.startCarousel();
-  },
+
   methods: {
-    startCarousel() {
-      setInterval(() => {
-        this.currentImageIndex = (this.currentImageIndex + 1) % this.$store.state.images.length;
-      }, 3000); // 每3秒切换一次图片
-    },
     showDetail(product) {
       this.selectedProduct = product;
     },
-    goToSlide(index) {
-      this.currentImageIndex = index;
-    },
-    prevSlide() {
-      if (this.currentImageIndex > 0) {
-        this.currentImageIndex--;
-      }
-    },
-    nextSlide() {
-      if (this.currentImageIndex < this.$store.state.images.length - 1) {
-        this.currentImageIndex++;
-      }
-    }
   }
 };
 </script>
@@ -104,12 +85,12 @@ export default {
 .left-block {
   flex: 4; /* 左侧块占据 3/4 宽度 */
   margin-right: 20px;
-  border: 1px solid #ccc; /* 添加边框 */
+/*  border: 1px solid #ccc; !* 添加边框 *!*/
   padding: 10px;
-  box-sizing: border-box;
-  border-radius: 10px 0 0 10px ; /* 圆角 */
-  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); /* 渐变背景色 */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+  /*box-sizing: border-box;*/
+/*  border-radius: 10px ; !* 圆角 *!*/
+/*  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); !* 渐变背景色 *!*/
+/*  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); !* 添加阴影 *!*/
 }
 
 .right-block {

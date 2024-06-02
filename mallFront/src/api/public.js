@@ -6,7 +6,7 @@ export function httpGet({
                             params = {}
                         }) {
     console.log('[httpGet] url:' + url + ', params:' + params);
-    return  new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         axios({
             url,
             method: 'get',

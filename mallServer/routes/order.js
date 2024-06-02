@@ -81,6 +81,13 @@ router.post('/create', function (req, res, next) {
                     var name = req.body.goods[i];
                     var quantity = req.body.goods[i+1];
                     var price = req.body.goods[i+2];
+                    // 在商品表中查找商品，扣减余量 stock
+                    connection.query('update goods set stock=stock-? where name=?', [quantity, name], function (err, result) {
+                        if (err) {
+                            console.log(err.message);
+                        }
+                    });
+                    // 创建订单明细
                     connection.query(sql.createOrderItem, [orderId, name, quantity, price], function (err, result) {
                         if (err) {
                            console.log(err.message);

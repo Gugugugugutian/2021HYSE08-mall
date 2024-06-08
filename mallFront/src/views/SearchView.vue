@@ -9,7 +9,7 @@
 <!--      <div v-if="searchQuery.trim() !== '' && searchResults.length === 0">
         <p>没有找到相关商品</p>
       </div>-->
-      <div v-else class="product-grid">
+      <div class="product-grid">
         <div v-for="result in searchResults" :key="result.id" class="product">
           <img :src="result.img" alt="Product Image">
           <p>{{ result.name }}</p>

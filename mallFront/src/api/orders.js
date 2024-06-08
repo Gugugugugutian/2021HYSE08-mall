@@ -3,7 +3,7 @@ import { httpPost, httpGet } from './public.js';
 // 创建订单表（执行建表语句）
 export function createOrderTable() {
     return httpGet({
-        url: '/orders',
+        url: '/api/orders',
         params: {},
     });
 }
@@ -11,7 +11,7 @@ export function createOrderTable() {
 // 创建新订单
 export function createOrder(username, date, total, address, orderTime, completionTime, goods) {
     return httpPost({
-        url: '/orders/create',
+        url: '/api/orders/create',
         data: {
             username: username,
             date: date,
@@ -27,7 +27,7 @@ export function createOrder(username, date, total, address, orderTime, completio
 // 根据用户名查询订单
 export function queryOrdersByUsername(username) {
     return httpGet({
-        url: '/orders/query',
+        url: '/api/orders/query',
         params: {
             username: username,
         },
@@ -37,7 +37,17 @@ export function queryOrdersByUsername(username) {
 // 根据订单ID查询订单详情
 export function queryOrderById(orderId) {
     return httpGet({
-        url: '/orders/queryitem',
+        url: '/api/orders/queryitem',
+        params: {
+            orderId: orderId,
+        },
+    });
+}
+
+// 根据订单id支付订单
+export function payOrder(orderId) {
+    return httpPost({
+        url: '/api/orders/pay',
         params: {
             orderId: orderId,
         },

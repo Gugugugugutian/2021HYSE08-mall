@@ -10,10 +10,10 @@
       </div>
     </div>
     <div class="bottom-section">
-      <div v-for="product in displayedProducts" :key="product.id" class="product" @click="showDetail(product)">
-        <img :src="product.image" alt="Product Image">
+      <div v-for="product in goods" :key="product.id" class="product" @click="showDetail(product)">
+        <img :src="product.img" alt="Product Image">
         <p>{{ product.name }}</p>
-        <p>￥{{ product.price }} </p>
+        <p style="font-size: 20px; color: forestgreen">￥{{ product.price }} </p>
       </div>
       <i class="product" style="height: 0; visibility: hidden; padding: 0"></i>
       <i class="product" style="height: 0; visibility: hidden; padding: 0"></i>
@@ -27,11 +27,13 @@
 
 <script>
 import Detail from '@/components/Detail.vue';
+import { getGoods } from "@/api/goods.js";
 
 export default {
   components: { Detail },
   data() {
     return {
+      goods: [],
       images: [
         {
           id: 1,
@@ -58,9 +60,20 @@ export default {
     }
   },
 
+  created() {
+    this.getGoodList();
+  },
+
   methods: {
     showDetail(product) {
       this.selectedProduct = product;
+    },
+    getGoodList(){
+      getGoods().then(response => {
+        this.goods = response.data;
+        console.log(this.goods);
+        }
+      )
     },
   }
 };

@@ -9,7 +9,7 @@
 <!--      <div v-if="searchQuery.trim() !== '' && searchResults.length === 0">
         <p>没有找到相关商品</p>
       </div>-->
-      <div class="product-grid">
+      <div v-else class="product-grid">
         <div v-for="result in searchResults" :key="result.id" class="product">
           <img :src="result.img" alt="Product Image">
           <p>{{ result.name }}</p>
@@ -35,29 +35,15 @@ export default {
       searchResults: [],
     };
   },
-  /*computed: {
-    displayedProducts() {
-      return this.searchQuery.trim() === '' ? this.$store.state.allProducts : this.searchResults;
-    }
-  },*/
   methods: {
-    /*search() {
-      if (this.searchQuery.trim() === '') {
-        this.searchResults = this.$store.state.allProducts;
-      } else {
-        this.searchResults = this.$store.state.allProducts.filter(product =>
-            product.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-        );
-      }
-    }*/
     getSearchResults(){
       if(this.searchQuery.trim() === ''){
         this.$message.error('请输入搜索内容');
       }
 
       searchGoods(this.searchQuery).then(response => {
-        this.searchQuery = response.data;
-        console.log('搜索结果: '+ this.searchQuery);
+        this.searchResults = response.data;
+        console.log('搜索结果: '+ this.searchResults);
 
         if(this.searchQuery.trim() !== '' && this.searchResults.length === 0 ){
           this.$message({
@@ -69,7 +55,7 @@ export default {
     },
     getGoodList(){
       getGoods().then(response => {
-        this.searchQuery = response.data;
+        this.searchResults = response.data;
         }
       )
     },

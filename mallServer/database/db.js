@@ -1,9 +1,10 @@
 module.exports = {
     mysql: {
-        host: '127.0.0.1',
-        user: 'gutian',
+        host: '123.249.21.244',
+        // host: '127.0.0.1',
+        user: 'root',
         password: '123456',
-        database:'mallserver',
+        database:'mallServer',
         port: 3306,
         charset:'UTF8_GENERAL_CI'
     }

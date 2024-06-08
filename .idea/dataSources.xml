@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:mysql://localhost:3306/mallserver</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="mallServer@123.249.21.244" uuid="8b5ae054-12e4-4217-9f05-fafac0a0b21a">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://123.249.21.244:3306/mallServer</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

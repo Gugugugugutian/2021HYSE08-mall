@@ -1,6 +1,5 @@
 <template>
   <div class="confirm-view">
-
     <div class="order-steps">
       <h2>购物车 &gt; 确认订单 &gt; 支付</h2>
     </div>
@@ -16,9 +15,7 @@
       <div class="order-item" v-for="item in selectedItems" :key="item.id">
         <img :src="item.image" alt="商品图片" class="product-image">
         <div class="item-details">
-          <h3>【狂欢价】【旗舰款】</h3>
-          <p>casio/卡西欧计算器FX-{{ item.id }}</p>
-          <p>颜色分类：fx-999CN CW-白色【旗舰款】</p>
+          <h3>{{ item.name }}</h3>
           <p>数量: {{ item.quantity }}</p>
           <p>单价: ¥{{ item.price.toFixed(2) }}</p>
         </div>
@@ -56,7 +53,7 @@ const confirmOrder = () => {
   router.push({
     path: '/cart/pay',
     query: {
-      items: route.query.items,
+      items: JSON.stringify(selectedItems.value),
       total: totalPrice.value
     }
   });

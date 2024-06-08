@@ -1,9 +1,8 @@
 <template>
   <div class="cart-view">
-    <h1>线上商城</h1>
 
     <div class="cart">
-      <h2>购物车 &gt; 确认订单 &gt; 支付</h2>
+
       <div class="select-all">
         <input type="checkbox" v-model="selectAll" @change="toggleSelectAll"> 全选
         <button @click="deleteSelected">删除</button>
@@ -12,9 +11,9 @@
         <input type="checkbox" v-model="item.selected">
         <img :src="item.image" alt="商品图片" class="product-image">
         <div class="item-details">
-          <h3>【狂欢价】【旗舰款】</h3>
-          <p>casio/卡西欧计算器FX-{{ item.id }}</p>
-          <p>颜色分类：fx-999CN CW-白色【旗舰款】</p>
+          <h3>{{ item.name }}</h3>
+          <p>数量: {{ item.quantity }}</p>
+          <p>单价: ¥{{ item.price.toFixed(2) }}</p>
         </div>
         <div class="item-price">
           <p class="price">¥{{ item.price.toFixed(2) }}</p>
@@ -23,11 +22,10 @@
             <span>{{ item.quantity }}</span>
             <button @click="incrementQuantity(item)">+</button>
           </div>
-          <p class="stock-limit">限购{{ item.limit }}件</p>
+          <p class="stock-limit">限购{{ item.stock }}件</p>
         </div>
         <div class="item-actions">
-          <p @click="moveToWishlist(item)">移入收藏夹</p>
-          <p @click="deleteItem(item)">删除</p>
+          <p @click="deleteItem(item.id)">删除</p>
         </div>
       </div>
       <div class="cart-summary">
@@ -39,17 +37,13 @@
 </template>
 
 <script>
-import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 export default {
   data() {
     return {
       selectAll: false,
-      cartItems: [
-        { id: 1, selected: true, image: 'image_url', stock: 58, price: 198.00, quantity: 1, limit: 20 },
-        { id: 2, selected: true, image: 'image_url', stock: 58, price: 198.00, quantity: 1, limit: 20 },
-        { id: 3, selected: true, image: 'image_url', stock: 58, price: 198.00, quantity: 1, limit: 20 },
-      ],
+      cartItems: [],
     };
   },
   computed: {
@@ -64,42 +58,84 @@ export default {
     },
   },
   methods: {
+    async fetchCartItems() {
+      try {
+        const response = await axios.get('/api/cart/items');
+        this.cartItems = response.data.map(item => ({
+          ...item,
+          selected: false,
+          price: parseFloat(item.price),  // 确保价格是数字
+          quantity: parseInt(item.quantity, 10)  // 确保数量是数字
+        }));
+        console.log('Fetched cart items:', this.cartItems);
+      } catch (error) {
+        console.error('Error fetching cart items:', error);
+      }
+    },
     toggleSelectAll() {
       this.cartItems.forEach(item => {
         item.selected = this.selectAll;
       });
     },
-    deleteSelected() {
-      this.cartItems = this.cartItems.filter(item => !item.selected);
+    async deleteItem(id) {
+      try {
+        console.log(`Attempting to delete item with id: ${id}`);
+        const response = await axios.delete(`/api/cart/remove/${id}`);
+        if (response.status === 204) {
+          console.log(`Item with id: ${id} deleted successfully`);
+          const index = this.cartItems.findIndex(item => item.id === id);
+          if (index !== -1) {
+            this.cartItems.splice(index, 1);
+            console.log('Updated cart items after deletion:', this.cartItems);
+          }
+        } else {
+          console.error(`Failed to delete item with id: ${id}`);
+        }
+      } catch (error) {
+        console.error(`Error deleting item with id: ${id}`, error);
+      }
+    },
+    async deleteSelected() {
+      const idsToDelete = this.selectedItems.map(item => item.id);
+      for (const id of idsToDelete) {
+        await this.deleteItem(id);
+      }
+      // 确保组件状态正确更新并重新渲染
+      this.cartItems = this.cartItems.filter(item => !idsToDelete.includes(item.id));
+      console.log('Cart items after deleting selected:', this.cartItems);
     },
     incrementQuantity(item) {
-      if (item.quantity < item.limit) {
+      if (item.quantity < item.stock) {
         item.quantity += 1;
+        this.updateCartItem(item);  // 确保在前端更新后同步到后端
       }
     },
     decrementQuantity(item) {
       if (item.quantity > 1) {
         item.quantity -= 1;
+        this.updateCartItem(item);  // 确保在前端更新后同步到后端
       }
     },
-    moveToWishlist(item) {
-      // 移动到收藏夹逻辑
-      alert(`商品 ${item.id} 已移入收藏夹！`);
-    },
-    deleteItem(item) {
-      this.cartItems = this.cartItems.filter(cartItem => cartItem.id !== item.id);
+    async updateCartItem(item) {
+      try {
+        await axios.post('/api/cart/update', item);
+      } catch (error) {
+        console.error('Error updating cart item:', error);
+      }
     },
     submitOrder() {
       // 提交订单逻辑
-      alert('订单已提交！');
       this.$router.push({
         path: '/cart/confirm',
         query: {
           items: JSON.stringify(this.selectedItems),
-          total: this.selectedItemsTotal,
-        },
+          total: this.selectedItemsTotal
+        }
       });
     },
+  },
+  mounted() {
+    this.fetchCartItems();
   },
 };
 </script>

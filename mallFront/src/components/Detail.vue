@@ -1,3 +1,4 @@
+@ -0,0 +1,95 @@
 <template>
   <div class="detail-overlay" @click.self="close">
     <div class="detail-container">
@@ -6,12 +7,14 @@
       <h2>{{ product.name }}</h2>
       <p>￥{{ product.price }} </p>
       <p>{{ product.description }}</p>
-      <button class="add-to-cart">添加到购物车</button>
+      <button class="add-to-cart" @click="addToCart">添加到购物车</button>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   props: {
     product: {
@@ -22,6 +25,24 @@ export default {
   methods: {
     close() {
       this.$emit('close');
+    },
+    async addToCart() {
+      try {
+
+        console.log('Adding to cart:', this.product);
+        const response = await axios.post('/api/cart/add', {
+          id: this.product.id,
+          name: this.product.name,
+          price: this.product.price,
+          image: this.product.image,
+          quantity: 1, // 初始添加的商品数量
+          stock: this.product.stock // 假设商品有 stock 属性
+        });
+        alert('商品已添加到购物车');
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+        alert('添加商品到购物车失败');
+      }
     }
   }
 };
@@ -73,3 +94,4 @@ export default {
   background-color: #0056b3;
 }
 </style>
+

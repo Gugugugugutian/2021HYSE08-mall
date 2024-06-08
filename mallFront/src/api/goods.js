@@ -6,3 +6,12 @@ export function getGoods(){
         params: {},
     })
 }
+
+export function searchGoods(keyword){
+    return httpGet({
+        url: '/api/goods/search',
+        params: {
+            keyword: keyword,
+        },
+    })
+}

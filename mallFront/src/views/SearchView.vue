@@ -1,47 +1,17 @@
-<script>
-export default {
-  data() {
-    return {
-      searchQuery: '',
-      searchResults: [],
-    };
-  },
-  computed: {
-    displayedProducts() {
-      return this.searchQuery.trim() === '' ? this.$store.state.allProducts : this.searchResults;
-    }
-  },
-  methods: {
-    search() {
-      if (this.searchQuery.trim() === '') {
-        this.searchResults = this.$store.state.allProducts;
-      } else {
-        this.searchResults = this.$store.state.allProducts.filter(product =>
-            product.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-        );
-      }
-    }
-  },
-  mounted() {
-    this.searchResults = this.$store.state.allProducts;
-  }
-};
-</script>
-
 <template>
   <main class="search-view">
     <div class="search-bar">
       <input type="text" v-model="searchQuery" placeholder="输入搜索内容">
-      <button @click="search">确认</button>
+      <button @click="getSearchResults">确认</button>
     </div>
 
     <div class="results">
-      <div v-if="searchQuery.trim() !== '' && searchResults.length === 0">
+<!--      <div v-if="searchQuery.trim() !== '' && searchResults.length === 0">
         <p>没有找到相关商品</p>
-      </div>
+      </div>-->
       <div v-else class="product-grid">
-        <div v-for="result in displayedProducts" :key="result.id" class="product">
-          <img :src="result.image" alt="Product Image">
+        <div v-for="result in searchResults" :key="result.id" class="product">
+          <img :src="result.img" alt="Product Image">
           <p>{{ result.name }}</p>
           <p style="font-size: 20px; color: forestgreen">￥{{ result.price }}</p>
         </div>
@@ -54,6 +24,62 @@ export default {
     </div>
   </main>
 </template>
+
+<script>
+import { getGoods, searchGoods } from "@/api/goods.js";
+
+export default {
+  data() {
+    return {
+      searchQuery: '',
+      searchResults: [],
+    };
+  },
+  /*computed: {
+    displayedProducts() {
+      return this.searchQuery.trim() === '' ? this.$store.state.allProducts : this.searchResults;
+    }
+  },*/
+  methods: {
+    /*search() {
+      if (this.searchQuery.trim() === '') {
+        this.searchResults = this.$store.state.allProducts;
+      } else {
+        this.searchResults = this.$store.state.allProducts.filter(product =>
+            product.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+        );
+      }
+    }*/
+    getSearchResults(){
+      if(this.searchQuery.trim() === ''){
+        this.$message.error('请输入搜索内容');
+      }
+
+      searchGoods(this.searchQuery).then(response => {
+        this.searchQuery = response.data;
+        console.log('搜索结果: '+ this.searchQuery);
+
+        if(this.searchQuery.trim() !== '' && this.searchResults.length === 0 ){
+          this.$message({
+            message: '搜索无结果',
+            type: 'warning'
+          })
+        }
+      })
+    },
+    getGoodList(){
+      getGoods().then(response => {
+        this.searchQuery = response.data;
+        }
+      )
+    },
+
+  },
+  created() {
+    this.getGoodList();
+  }
+};
+</script>
 
 <style scoped>
 .search-view {

@@ -112,7 +112,7 @@ router.post('/delete', function (req, res, next) {
         //     });
         //     return;
         // }
-        connection*/.query(sql.deleteAddress, req.query.id, function (err, result) {
+        connection*/.query(sql.deleteAddress, req.body.id, function (err, result) {
             if (err) {
                 console.log(err.message);
                 res.status(500).send({

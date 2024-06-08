@@ -44,8 +44,9 @@ export default {
       this.selectedProduct = product;
     },
     getSearchResults(){
-      if(this.searchQuery.trim() === ''){
+      if(this.searchQuery.trim() === ''){ //输入为空或者只有空格时弹出提醒
         this.$message.error('请输入搜索内容');
+        this.searchQuery = ''; //输入栏归空，避免出现有空格情况
       }
 
       searchGoods(this.searchQuery).then(response => {
@@ -66,7 +67,6 @@ export default {
         }
       )
     },
-
   },
   created() {
     this.getGoodList();

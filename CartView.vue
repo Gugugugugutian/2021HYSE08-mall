@@ -38,6 +38,7 @@
 
 <script>
 import axios from 'axios';
+import { createOrder } from '@/api/orders'; // 确保路径正确
 
 export default {
   data() {
@@ -83,11 +84,8 @@ export default {
         const response = await axios.delete(`/api/cart/remove/${id}`);
         if (response.status === 204) {
           console.log(`Item with id: ${id} deleted successfully`);
-          const index = this.cartItems.findIndex(item => item.id === id);
-          if (index !== -1) {
-            this.cartItems.splice(index, 1);
-            console.log('Updated cart items after deletion:', this.cartItems);
-          }
+          this.cartItems = this.cartItems.filter(item => item.id !== parseInt(id));
+          console.log('Updated cart items after deletion:', this.cartItems);
         } else {
           console.error(`Failed to delete item with id: ${id}`);
         }
@@ -123,15 +121,33 @@ export default {
         console.error('Error updating cart item:', error);
       }
     },
-    submitOrder() {
-      // 提交订单逻辑
-      this.$router.push({
-        path: '/cart/confirm',
-        query: {
-          items: JSON.stringify(this.selectedItems),
-          total: this.selectedItemsTotal
+    async submitOrder() {
+      try {
+        const username = 'testuser'; // Replace with actual username
+        const date = new Date().toISOString().split('T')[0];
+        const total = this.selectedItemsTotal;
+        const address = 'Test Address'; // Replace with actual address
+        const orderTime = new Date().toISOString();
+        const completionTime = new Date().toISOString(); // Replace with actual completion time
+        const goods = this.selectedItems;
+
+        console.log('Creating order with the following data:', {
+          username, date, total, address, orderTime, completionTime, goods
+        });
+
+        const response = await createOrder(username, date, total, address, orderTime, completionTime, goods);
+        if (response && response.data) {
+          console.log('Order created successfully:', response.data);
+          // 订单创建成功后的操作，例如清空购物车或导航到订单确认页面
+          this.cartItems = this.cartItems.filter(item => !goods.includes(item));
+          alert('订单已提交！');
+          // 这里你可以添加任何其他的逻辑来处理订单成功后，例如跳转到订单确认页面
+        } else {
+          console.error('Failed to create order:', response);
         }
-      });
+      } catch (error) {
+        console.error('Error creating order:', error);
+      }
     },
   },
   mounted() {

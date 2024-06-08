@@ -1,9 +1,9 @@
-import { httpPost, httpGet, httpDelete } from './public.js';
+import { httpPost, httpGet } from './public.js';
 
 // 创建地址表（执行建表语句）
 export function createAddressTable() {
     return httpGet({
-        url: '/address',
+        url: '/api/address',
         params: {},
     });
 }
@@ -11,7 +11,7 @@ export function createAddressTable() {
 // 添加新地址
 export function addAddress(username, name, phone, city, street) {
     return httpPost({
-        url: '/address/add',
+        url: '/api/address/add',
         data: {
             username: username,
             name: name,
@@ -24,8 +24,8 @@ export function addAddress(username, name, phone, city, street) {
 
 // 删除地址
 export function deleteAddress(id) {
-    return httpDelete({
-        url: '/address/delete',
+    return httpPost({
+        url: '/api/address/delete',
         data: {
             id: id,
         },
@@ -33,9 +33,9 @@ export function deleteAddress(id) {
 }
 
 // 获取地址
-export function getAddress(username) {
+export function getAddressByUsername(username) {
     return httpGet({
-        url: '/address/get',
+        url: '/api/address/get',
         params: {
             username: username,
         },

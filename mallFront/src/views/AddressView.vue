@@ -51,7 +51,7 @@ const saveAddress = async () => {
   if (editingIndex.value >= 0) {
     try {
       addresses.value[editingIndex.value] = { ...editAddressData.value };
-      await addAddress(editAddressData.value);
+      await addAddress({...editAddressData.value});
       response.value = '地址修改成功';
     } catch (error) {
       response.value = '地址修改失败';
@@ -90,9 +90,9 @@ const closeDialog = () => {
 <template>
   <main>
     <div class="user-info">
-      <h2>订单管理 | 用户信息</h2>
+<!--      <h2>订单管理 | 用户信息</h2>-->
       <div class="user-name">
-        <label for="username">用户名</label>
+        <label for="username">姓名</label>
         <input type="text" id="username" v-model="username" disabled />
       </div>
     </div>

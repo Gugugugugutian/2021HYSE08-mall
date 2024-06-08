@@ -103,7 +103,7 @@ router.get('/get', function (req, res, next) {
 // 每个地址有一个独立的id，通过ID进行删除
 // url: /address/delete
 // params: id
-router.delete('/delete', function (req, res, next) {
+router.post('/delete', function (req, res, next) {
     pool.getConnection(function (err, connection) {
         // if(!req.session.username) {
         //     res.status(401).send({

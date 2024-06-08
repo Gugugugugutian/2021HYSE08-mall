@@ -10,7 +10,7 @@
         <p>没有找到相关商品</p>
       </div>-->
       <div class="product-grid">
-        <div v-for="result in searchResults" :key="result.id" class="product">
+        <div v-for="result in searchResults" :key="result.id" class="product" @click="showDetail(result)">
           <img :src="result.img" alt="Product Image">
           <p>{{ result.name }}</p>
           <p style="font-size: 20px; color: forestgreen">￥{{ result.price }}</p>
@@ -21,21 +21,28 @@
         <i class="product" style="height: 0; visibility: hidden; padding: 0"></i>
         <i class="product" style="height: 0; visibility: hidden; padding: 0"></i>
       </div>
+      <Detail v-if="selectedProduct" :product="selectedProduct" @close="selectedProduct = null"/>
     </div>
   </main>
 </template>
 
 <script>
 import { getGoods, searchGoods } from "@/api/goods.js";
+import Detail from '@/components/Detail.vue';
 
 export default {
+  components: { Detail },
   data() {
     return {
       searchQuery: '',
       searchResults: [],
+      selectedProduct: null
     };
   },
   methods: {
+    showDetail(product) {
+      this.selectedProduct = product;
+    },
     getSearchResults(){
       if(this.searchQuery.trim() === ''){
         this.$message.error('请输入搜索内容');

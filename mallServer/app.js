@@ -13,6 +13,7 @@ var usersRouter = require('./routes/users');
 var goodsRouter = require('./routes/goods');
 var addressRouter = require('./routes/address');
 var orderRouter = require('./routes/order');
+var cartRouter = require('./routes/cart');
 var cors = require('cors');
 var corsOptions = {
   origin: 'http://127.0.0.1:5173',
@@ -57,6 +58,7 @@ app.use('/users', usersRouter);
 app.use('/goods', goodsRouter);
 app.use('/address', addressRouter);
 app.use('/orders', orderRouter);
+app.use('/cart', cartRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

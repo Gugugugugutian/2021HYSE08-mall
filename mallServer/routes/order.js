@@ -68,7 +68,7 @@ router.post('/create', function (req, res, next) {
     const total = req.body.total;
     const address = req.body.address;
     const orderTime = req.body.orderTime;
-    const completionTime = req.body.completionTime;
+    const completionTime = 'unpaid';
     const goods = req.body.goods;
     console.log(req.body);
     pool.getConnection(function (err, connection) {
@@ -156,5 +156,23 @@ router.get('/queryitem', function (req, res, next) {
         });
     });
 });
+
+// 订单支付
+// url: /orders/pay
+// params: orderId
+router.post('/pay', function (req, res, next) {
+    const orderId = req.body.orderId;
+    pool.getConnection(function (err, connection) {
+        connection.query('update order_table set completionTime=? where orderId=?', [new Date(), orderId], function (err, result) {
+            if (err) {
+                console.log(err.message);
+            } else {
+                res.status(200).send({
+                    msg: '支付成功',
+                });
+            }
+        })
+    })
+})
 
 module.exports = router;

@@ -80,7 +80,7 @@ const closeDialog = () => {
   <main>
     <div class="user-info">
       <div class="user-name">
-        <label for="username">姓名</label>
+        <label for="username">用户名</label>
         <input type="text" id="username" v-model="username" disabled/>
       </div>
     </div>

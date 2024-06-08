@@ -28,10 +28,8 @@ onMounted(() => {
 
 <template>
   <main>
-    <h1>订单管理页面</h1>
-
     <div class="order-history">
-      <h2>用户查看历史订单的界面</h2>
+      <h2>历史订单</h2>
       <div v-for="(order, index) in orders" :key="index" class="order-item">
         <div class="order-header">
           <div class="order-date">{{ order.date }}</div>

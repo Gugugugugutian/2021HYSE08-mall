@@ -106,13 +106,13 @@ router.get('/get', function (req, res, next) {
 router.post('/delete', function (req, res, next) {
     pool/*.getConnection(function (err, connection) {
         // if(!req.session.username) {
-        //     res.status(401).send({
+        //     res.status(403).send({
         //         code: 1,
         //         msg: '请先登录'
         //     });
         //     return;
         // }
-        connection*/.query(sql.deleteAddress, req.body.id, function (err, result) {
+        connection*/.query(sql.deleteAddress, [req.body.id], function (err, result) {
             if (err) {
                 console.log(err.message);
                 res.status(500).send({
@@ -120,6 +120,7 @@ router.post('/delete', function (req, res, next) {
                     msg: '删除地址失败'
                 })
             } else if (result.affectedRows === 0) {
+                console.log('Address ' + req.body.id + ' not found');
                 res.status(404).send({
                     code: 0,
                     msg: '该地址不存在'

@@ -28,7 +28,7 @@ export function deleteAddress(id) {
         url: '/api/address/delete',
         data: {
             id: id,
-        },
+        }
     });
 }
 

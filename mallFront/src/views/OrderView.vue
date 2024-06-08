@@ -1,9 +1,11 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 import { queryOrdersByUsername } from '@/api/orders.js';
 
 const store = useStore();
+const router = useRouter();
 
 const username = computed(() => store.getters.username);
 const orders = ref([]);
@@ -11,7 +13,16 @@ const orders = ref([]);
 const fetchOrders = async () => {
   try {
     const response = await queryOrdersByUsername(username.value);
-    orders.value = response.data;
+    console.log('Response:', response); // 调试输出
+    console.log('Response[2]:', response[2]);
+    console.log('Response.data:', response.data);
+    console.log('Response.order:', response.order);
+
+    orders.value=response.order;
+    console.log('orders.value:', orders.value);
+
+
+
   } catch (error) {
     console.error('Failed to fetch orders:', error);
   }
@@ -44,8 +55,6 @@ onMounted(() => {
             {{ item.name }} x {{ item.quantity }}
             <div class="item-prices">
               <span>价格: {{ item.price }} 元</span>
-<!--              <span>优惠: -{{ item.discount }} 元</span>
-              <span>实付款: {{ item.finalPrice }} 元</span>-->
             </div>
           </div>
         </div>

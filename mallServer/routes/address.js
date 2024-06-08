@@ -28,8 +28,8 @@ var sql = {
 // url: /address
 // params: none.
 router.get('/', function (req, res, next) {
-    pool.getConnection(function (err, connection) {
-        connection.query(sql.createAddressTable, function (err, result) {
+    pool/*.getConnection(function (err, connection) {
+        connection*/.query(sql.createAddressTable, function (err, result) {
             if (err) {
                 console.log(err.message);
                 res.status(500).send({
@@ -43,15 +43,15 @@ router.get('/', function (req, res, next) {
                 });
             }
         });
-    });
+   // });
 });
 
 // 添加地址
 // url: /address/add
 // params: username, name, phone, city, street.
 router.post('/add', function (req, res, next) {
-    pool.getConnection(function (err, connection) {
-        connection.query(sql.addAddress, [req.body.username, req.body.name, req.body.phone, req.body.city, req.body.street], function (err, result) {
+    pool/*.getConnection(function (err, connection) {
+        connection*/.query(sql.addAddress, [req.body.username, req.body.name, req.body.phone, req.body.city, req.body.street], function (err, result) {
             if (err) {
                 console.log(err.message);
                 res.status(500).send({
@@ -66,7 +66,7 @@ router.post('/add', function (req, res, next) {
                });
            }
        });
-   });
+   //});
 });
 
 
@@ -74,8 +74,8 @@ router.post('/add', function (req, res, next) {
 // url: /address/get
 // params: username
 router.get('/get', function (req, res, next) {
-    pool.getConnection(function (err, connection) {
-        connection.query(sql.getAddressByUsername, req.query.username, function (err, result) {
+    pool/*.getConnection(function (err, connection) {
+        connection*/.query(sql.getAddressByUsername, req.query.username, function (err, result) {
             if (err) {
                 console.log(err.message);
                 res.status(500).send({
@@ -96,7 +96,7 @@ router.get('/get', function (req, res, next) {
                 });
             }
         })
-    });
+   // });
 });
 
 // 用户删除地址
@@ -104,7 +104,7 @@ router.get('/get', function (req, res, next) {
 // url: /address/delete
 // params: id
 router.post('/delete', function (req, res, next) {
-    pool.getConnection(function (err, connection) {
+    pool/*.getConnection(function (err, connection) {
         // if(!req.session.username) {
         //     res.status(401).send({
         //         code: 1,
@@ -112,7 +112,7 @@ router.post('/delete', function (req, res, next) {
         //     });
         //     return;
         // }
-        connection.query(sql.deleteAddress, req.query.id, function (err, result) {
+        connection*/.query(sql.deleteAddress, req.query.id, function (err, result) {
             if (err) {
                 console.log(err.message);
                 res.status(500).send({
@@ -131,7 +131,7 @@ router.post('/delete', function (req, res, next) {
                 });
             }
         });
-    });
+    //});
 });
 
 module.exports = router;

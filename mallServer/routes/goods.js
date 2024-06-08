@@ -41,8 +41,8 @@ var sql = {
 // 创建商品表
 // url: /goods
 router.get('/', function (req, res, next) {
-    pool.getConnection(function (err, connection) {
-        connection.query(sql.createGoodsTable, function (err, result) {
+    pool/*.getConnection(function (err, connection) {
+        connection*/.query(sql.createGoodsTable, function (err, result) {
             if (err) {
                 console.log(err.message);
                 res.status(500).send({
@@ -56,14 +56,14 @@ router.get('/', function (req, res, next) {
                 });
             }
         });
-    });
+    // });
 });
 
 // 获取所有商品
 // url: /goods/all
 router.get('/all', function (req, res, next) {
-    pool.getConnection(function (err, connection) {
-        connection.query(sql.selectGoods, function (err, result) {
+    pool/*.getConnection(function (err, connection) {
+        connection*/.query(sql.selectGoods, function (err, result) {
             if (err) {
                 console.log(err.message);
                 res.status(500).send({
@@ -78,7 +78,7 @@ router.get('/all', function (req, res, next) {
                 });
             }
         });
-    });
+    // });
 });
 
 // 根据id获取商品
@@ -86,8 +86,8 @@ router.get('/all', function (req, res, next) {
 // params: id
 router.get('/id', function (req, res, next) {
     var id = req.query.id;
-    pool.getConnection(function (err, connection) {
-        connection.query(sql.selectGoodsById, id, function (err, result) {
+    pool/*.getConnection(function (err, connection) {
+        connection*/.query(sql.selectGoodsById, id, function (err, result) {
             if (err) {
                 console.log(err.message);
                 res.status(500).send({
@@ -104,7 +104,7 @@ router.get('/id', function (req, res, next) {
                 )
             }
         });
-    });
+    // });
 });
 
 // 根据关键字搜索商品
@@ -112,8 +112,8 @@ router.get('/id', function (req, res, next) {
 // params: keyword
 router.get('/search', function (req, res, next) {
     var keyword = '%' + req.query.keyword + '%';
-    pool.getConnection(function (err, connection) {
-        connection.query(sql.searchGoods, keyword, function (err, result) {
+    pool/*.getConnection(function (err, connection) {
+        connection*/.query(sql.searchGoods, keyword, function (err, result) {
             if (err) {
                 console.log(err.message);
                 res.status(500).send({
@@ -129,7 +129,7 @@ router.get('/search', function (req, res, next) {
                    });
                }
            })
-       });
+     //  });
 });
 
 // 分页获取商品
@@ -138,8 +138,8 @@ router.get('/search', function (req, res, next) {
 router.get('/page', function (req, res, next) {
     var page = req.query.page;
     var pageSize = req.query.pageSize;
-    pool.getConnection(function (err, connection) {
-        connection.query(sql.getGoodsByPage, [page, pageSize], function (err, result) {
+    pool/*.getConnection(function (err, connection) {
+        connection*/.query(sql.getGoodsByPage, [page, pageSize], function (err, result) {
             if (err) {
                 console.log(err.message);
                 res.status(500).send({
@@ -156,7 +156,7 @@ router.get('/page', function (req, res, next) {
                 )
             }
         });
-    });
+    //});
 });
 
 module.exports = router;

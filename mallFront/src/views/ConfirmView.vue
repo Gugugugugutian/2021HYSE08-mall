@@ -156,7 +156,7 @@ onMounted(() => {
 });
 </script>
 
-<style>
+<style scoped>
 .confirm-view {
   font-family: Arial, sans-serif;
   text-align: center;

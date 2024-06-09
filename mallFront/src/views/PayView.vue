@@ -50,7 +50,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .pay-view {
   font-family: Arial, sans-serif;
   text-align: center;

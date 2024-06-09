@@ -3,7 +3,7 @@
   <div class="detail-overlay" @click.self="close">
     <div class="detail-container">
       <button class="close-button" @click="close">&#x2715;</button>
-      <img :src="product.image" alt="Product Image">
+      <img :src="product.img" alt="Product Image">
       <h2>{{ product.name }}</h2>
       <p>￥{{ product.price }} </p>
       <p>{{ product.description }}</p>

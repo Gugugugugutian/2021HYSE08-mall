@@ -67,6 +67,7 @@ export default {
     updateCartItems(str) {
       this.$store.commit('updateCart', str);
     },
+
     async fetchCartItems() {
       try {
         const response = await axios.get('/api/cart/items');
@@ -110,16 +111,60 @@ export default {
       this.cartItems = this.cartItems.filter(item => !idsToDelete.includes(item.id));
       console.log('Cart items after deleting selected:', this.cartItems);
     },
+    parseCart(str) {
+      let result = [];
+      if (str) {
+        str.split(',').forEach((item) => {
+          const [id, quantity] = item.split(':');
+          result.push({
+            id,
+            quantity: parseInt(quantity, 10), // 确保数量是整数
+          });
+        });
+      }
+      return result;
+    },
+    stringifyCart(cart) {
+      return cart.map(item => `${item.id}:${item.quantity}`).join(',');
+    },
     incrementQuantity(item) {
-      if (item.quantity < item.stock) {
-        item.quantity += 1;
-        this.updateCartItem(item);  // 确保在前端更新后同步到后端
+      try {
+        // 获取当前购物车字符串
+        let cartString = localStorage.getItem('cart') || '';
+        // 解析购物车字符串为对象数组
+        let cart = this.parseCart(cartString);
+        // 当前要添加的商品信息
+        let newItemQuantity = 1; // +1
+        if (item.quantity > 1) {
+          item.quantity += newItemQuantity;
+        }
+        // 将对象数组转换为字符串格式
+        let newCartString = this.stringifyCart(cart);
+        // 保存更新后的购物车字符串到本地存储
+        localStorage.setItem('cart', newCartString);
+        console.log(this.product,'count sub 1:');
+      }catch (error) {
+        console.error('Error incrementing item quantity:', error);
       }
     },
     decrementQuantity(item) {
-      if (item.quantity > 1) {
-        item.quantity -= 1;
-        this.updateCartItem(item);  // 确保在前端更新后同步到后端
+      try {
+        // 获取当前购物车字符串
+        let cartString = localStorage.getItem('cart') || '';
+        // 解析购物车字符串为对象数组
+        let cart = this.parseCart(cartString);
+        // 当前要添加的商品信息
+        let newItemQuantity = -1; // -1
+        if (item.quantity > 1) {
+          item.quantity += newItemQuantity;
+        }
+        // 将对象数组转换为字符串格式
+        let newCartString = this.stringifyCart(cart);
+        // 保存更新后的购物车字符串到本地存储
+        localStorage.setItem('cart', newCartString);
+        console.log(this.product,'count sub 1:');
+      }catch (error) {
+        console.error('Error decrementing item quantity:', error);
       }
     },
     async updateCartItem(item) {

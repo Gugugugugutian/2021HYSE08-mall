@@ -26,18 +26,51 @@ export default {
     close() {
       this.$emit('close');
     },
+    parseCart(str) {
+      let result = [];
+      if (str) {
+        str.split(',').forEach((item) => {
+          const [id, quantity] = item.split(':');
+          result.push({
+            id,
+            quantity: parseInt(quantity, 10), // 确保数量是整数
+          });
+        });
+      }
+      return result;
+    },
+    stringifyCart(cart) {
+      return cart.map(item => `${item.id}:${item.quantity}`).join(',');
+    },
     async addToCart() {
       try {
+        // 获取当前购物车字符串
+        let cartString = localStorage.getItem('cart') || '';
+
+        // 解析购物车字符串为对象数组
+        let cart = this.parseCart(cartString);
+
+        // 当前要添加的商品信息
+        let newItemId = this.product.id.toString();
+        let newItemQuantity = 1; // 假设每次只添加一个商品
+
+        // 检查新商品ID是否已经存在
+        let itemExists = cart.find(item => item.id === newItemId);
+        if (itemExists) {
+          itemExists.quantity += newItemQuantity;
+          console.log(`商品ID ${newItemId} 已经存在于购物车中。`);
+        } else {
+          // 添加新商品
+          cart.push({ id: newItemId, quantity: newItemQuantity });
+        }
+
+        // 将对象数组转换为字符串格式
+        let newCartString = this.stringifyCart(cart);
+
+        // 保存更新后的购物车字符串到本地存储
+        localStorage.setItem('cart', newCartString);
 
         console.log('Adding to cart:', this.product);
-        const response = await axios.post('/api/cart/add', {
-          id: this.product.id,
-          name: this.product.name,
-          price: this.product.price,
-          image: this.product.image,
-          quantity: 1, // 初始添加的商品数量
-          stock: this.product.stock // 假设商品有 stock 属性
-        });
         alert('商品已添加到购物车');
       } catch (error) {
         console.error('Error adding to cart:', error);

@@ -38,7 +38,7 @@
 
 <script>
 import axios from 'axios';
-import { createOrder } from '@/api/orders';
+import { getGoodsById } from '@/api/goods.js';
 import router from "@/router/index.js"; // 确保路径正确
 
 export default {
@@ -68,69 +68,54 @@ export default {
     updateCartItems(str) {
       this.$store.commit('updateCart', str);
     },
+    // 根据购物车存储的id，获取商品详情
     async fetchCartItems() {
       try {
         const cartString = localStorage.getItem('cart') || '';
         const cart = this.parseCart(cartString);
 
         // 使用 Promise.all 并行获取每个商品的信息
-        const fetchItemsPromises = cart.map(item => this.fetchCartItem(item.id).then(product => ({
-          ...product,
-          quantity: item.quantity,
-          selected: false,
-        })));
-
+        const fetchItemsPromises = cart.map(item => this.fetchCartItem(item.id).then(product => {
+          console.log('product: ', product)
+          return {
+            name: product.name,
+            price: product.price,
+            stock: product.stock,
+            image: product.img,
+            id: item.id,
+            quantity: item.quantity,
+            selected: false,
+          }
+        }));
         this.cartItems = await Promise.all(fetchItemsPromises);
         console.log('Fetched cart items:', this.cartItems);
       } catch (error) {
         console.error('Error fetching cart items:', error);
       }
     },
-
     async fetchCartItem(id) {
       try {
-        const response = await axios.get(`/api/goods/${id}`);
-        const item = response.data;
+        const response = await getGoodsById(id);
+        const item = response.data[0];
+        console.log(item);
         return {
-          id: item.id.toString(), // 确保ID是字符串
+          id: item.id,
           name: item.name,
-          price: parseFloat(item.price), // 确保价格是数字
+          price: item.price,
           stock: item.stock,
-          img: item.img // 假设每个商品都有一个图片URL
+          img: item.img
         };
       } catch (error) {
         console.error(`获取购物车商品信息时出错：`, error);
       }
     },
+
     toggleSelectAll() {
       this.cartItems.forEach(item => {
         item.selected = this.selectAll;
       });
     },
-    async deleteItem(id) {
-      try {
-        console.log(`Attempting to delete item with id: ${id}`);
-        const response = await axios.delete(`/api/cart/remove/${id}`);
-        if (response.status === 204) {
-          console.log(`Item with id: ${id} deleted successfully`);
-          this.cartItems = this.cartItems.filter(item => item.id !== parseInt(id));
-          console.log('Updated cart items after deletion:', this.cartItems);
-        } else {
-          console.error(`Failed to delete item with id: ${id}`);
-        }
-      } catch (error) {
-        console.error(`Error deleting item with id: ${id}`, error);
-      }
-    },
-    async deleteSelected() {
-      const idsToDelete = this.selectedItems.map(item => item.id);
-      for (const id of idsToDelete) {
-        await this.deleteItem(id);
-      }
-      // 确保组件状态正确更新并重新渲染
-      this.cartItems = this.cartItems.filter(item => !idsToDelete.includes(item.id));
-      console.log('Cart items after deleting selected:', this.cartItems);
-    },
+
     parseCart(str) {
       let result = [];
       if (str) {
@@ -187,47 +172,12 @@ export default {
         console.error('Error decrementing item quantity:', error);
       }
     },
-    async updateCartItem(item) {
-      try {
-        await axios.post('/api/cart/update', item);
-      } catch (error) {
-        console.error('Error updating cart item:', error);
-      }
-    },
 
     // 提交订单
     submitOrder() {
       router.push('/cart/confirm');
       router.go(1);
     },
-    // async submitOrder() {
-    //   try {
-    //     const username = 'testuser'; // Replace with actual username
-    //     const date = new Date().toISOString().split('T')[0];
-    //     const total = this.selectedItemsTotal;
-    //     const address = 'Test Address'; // Replace with actual address
-    //     const orderTime = new Date().toISOString();
-    //     const completionTime = new Date().toISOString(); // Replace with actual completion time
-    //     const goods = this.selectedItems;
-    //
-    //     console.log('Creating order with the following data:', {
-    //       username, date, total, address, orderTime, completionTime, goods
-    //     });
-    //
-    //     const response = await createOrder(username, date, total, address, orderTime, completionTime, goods);
-    //     if (response && response.data) {
-    //       console.log('Order created successfully:', response.data);
-    //       // 订单创建成功后的操作，例如清空购物车或导航到订单确认页面
-    //       this.cartItems = this.cartItems.filter(item => !goods.includes(item));
-    //       alert('订单已提交！');
-    //       // 这里你可以添加任何其他的逻辑来处理订单成功后，例如跳转到订单确认页面
-    //     } else {
-    //       console.error('Failed to create order:', response);
-    //     }
-    //   } catch (error) {
-    //     console.error('Error creating order:', error);
-    //   }
-    // },
   },
   async mounted() {
     await this.fetchCartItems();

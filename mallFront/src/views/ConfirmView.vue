@@ -13,7 +13,20 @@
     
     <div class="order-info">
       <h3>商品信息</h3>
-      <p>参考CartView</p>
+      <div class="cart-item" v-for="item in cartItems" :key="item.id">
+        <img :src="item.image" alt="商品图片" class="product-image">
+        <div class="item-details">
+          <h3>{{ item.name }}</h3>
+          <p>数量: {{ item.quantity }}</p>
+          <p>单价: ¥{{ item.price.toFixed(2) }}</p>
+        </div>
+        <div class="item-price">
+          <p class="price">¥{{ (item.price*item.quantity).toFixed(2) }}</p>
+          <div class="quantity-controls">
+            <span>{{ item.quantity }}</span>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="order-summary">
       <p>总价: ¥{{ totalPrice.toFixed(2) }}</p>
@@ -36,6 +49,7 @@ const username = computed(() => store.getters.username); // 从 Vuex 获取用�
 
 const totalPrice = ref(24.00);
 const defaultAddress = ref({}); // 存储默认地址
+
 const addresses = ref([]); // 存储所有地址
 const showModal = ref(false); // 控制弹窗显示
 
@@ -78,8 +92,67 @@ const confirmOrder = () => {
   router.go(1);
 }
 
+// 根据购物车存储的id，获取商品详情
+const cartItems = ref([]);
+import {getGoodsById} from "@/api/goods.js";
+const parseCart = (str) => {
+  let result = [];
+  if (str) {
+    str.split(',').forEach((item) => {
+      const [id, quantity] = item.split(':');
+      result.push({
+        id,
+        quantity: parseInt(quantity, 10), // 确保数量是整数
+      });
+    });
+  }
+  return result;
+}
+const fetchCartItem = async (id) => {
+  try {
+    const response = await getGoodsById(id);
+    const item = response.data[0];
+    return {
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      stock: item.stock,
+      img: item.img
+    };
+  } catch (error) {
+    console.error(`获取购物车商品信息时出错：`, error);
+  }
+}
+const fetchCartItems = async () => {
+  try {
+    const cartString = localStorage.getItem('cart') || '';
+    const cart = parseCart(cartString);
+
+    // 使用 Promise.all 并行获取每个商品的信息
+    const fetchItemsPromises = cart.map(item => fetchCartItem(item.id).then(product => {
+      console.log('product: ', product)
+      return {
+        name: product.name,
+        price: product.price,
+        stock: product.stock,
+        image: product.img,
+        id: item.id,
+        quantity: item.quantity,
+        selected: false,
+      }
+    }));
+    cartItems.value = await Promise.all(fetchItemsPromises);
+    console.log('Fetched cart items:', cartItems.value);
+    // 计算总价
+    totalPrice.value = cartItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  } catch (error) {
+    console.error('Error fetching cart items:', error);
+  }
+}
+
 onMounted(() => {
   fetchAddresses(); // 组件挂载时获取地址数据
+  fetchCartItems(); // 组件挂载时获取购物车数据
 });
 </script>
 
@@ -135,5 +208,38 @@ nav a {
   color: white;
   border: none;
   cursor: pointer;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 0;
+}
+.product-image {
+  width: 80px;
+  height: 80px;
+  background-color: #f0f0f0;
+  margin-right: 20px;
+}
+.item-details {
+  flex: 2;
+  text-align: left;
+}
+.item-details h3 {
+  font-size: 14px;
+  margin: 0;
+}
+.item-details p {
+  font-size: 12px;
+  margin: 2px 0;
+}
+.item-price {
+  flex: 1;
+  text-align: center;
+}
+.item-price .price {
+  color: red;
+  font-size: 18px;
 }
 </style>

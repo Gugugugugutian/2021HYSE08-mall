@@ -9,17 +9,13 @@ export function createOrderTable() {
 }
 
 // 创建新订单
-export function createOrder(username, date, total, address, orderTime, completionTime, goods) {
+export function createOrder(username, address, cartString) {
     return httpPost({
         url: '/api/orders/create',
         data: {
             username: username,
-            date: date,
-            total: total,
             address: address,
-            orderTime: orderTime,
-            completionTime: completionTime,
-            goods: goods,
+            cart: cartString,
         },
     });
 }

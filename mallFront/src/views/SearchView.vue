@@ -11,7 +11,7 @@
       </div>-->
       <div class="product-grid">
         <div v-for="result in searchResults" :key="result.id" class="product" @click="showDetail(result)">
-          <img :src="result.img" alt="Product Image" style="min-height: 200px">
+          <img :src="result.img" alt="Product Image" style="min-height: 200px; width: 200px">
           <p>{{ result.name }}</p>
           <p style="font-size: 20px; color: forestgreen">￥{{ result.price }}</p>
         </div>

@@ -11,7 +11,7 @@
     </div>
     <div class="bottom-section">
       <div v-for="product in goods" :key="product.id" class="product" @click="showDetail(product)">
-        <img :src="product.img" alt="Product Image" style="width: 200px; min-height:200px">
+        <img :src="product.img" alt="Product Image" style="max-width: 200px; min-height:200px">
         <p> {{ product.name }} </p>
         <p style="font-size: 20px; color: forestgreen">￥{{ product.price }} </p>
       </div>

@@ -25,13 +25,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
 import axios from 'axios';
 import AddressModal from './AddressModal.vue'; // 引入 AddressModal 组件
+import { getAddressByUsername } from "@/api/address.js";
 
 const store = useStore();
-//const username = store.getters.username; // 从 Vuex 获取用户名
+const username = computed(() => store.getters.username); // 从 Vuex 获取用户名
 
 const totalPrice = ref(24.00);
 const defaultAddress = ref({}); // 存储默认地址
@@ -40,9 +41,9 @@ const showModal = ref(false); // 控制弹窗显示
 
 const fetchAddresses = async () => { // 获取地址数据
   try {
-    const response = await axios.get('http://localhost:3000/api/address/get', { params: username } });
-    if (response.data && response.data.data.length > 0) {
-      addresses.value = response.data.data;
+    const response = await getAddressByUsername(username.value);
+    if (response.data && response.data.length > 0) {
+      addresses.value = response.data;
       defaultAddress.value = addresses.value[0]; // 设置默认地址为第一个地址
     }
   } catch (error) {
@@ -122,4 +123,3 @@ nav a {
   cursor: pointer;
 }
 </style>
-

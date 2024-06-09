@@ -72,9 +72,13 @@ const confirmOrder = () => {
     address: addressToString(defaultAddress.value),
     cart: this.$store.getters.cart,
     username: this.$store.getters.username,
+  }).then(() => {
+    // 路由跳转到支付页面
+    router.push('/pay');
+  }).catch((error) => {
+    // 报错
+    alert(error);
   })
-  // 路由跳转到支付页面
-  router.push('/pay');
 };
 
 onMounted(() => {

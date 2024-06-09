@@ -5,8 +5,10 @@ const store = createStore({
         // 用户信息
         // 请从本地缓存中获取 localStorage.getItem('username')
         // 或者使用 Getter: this.$store.getters.username
+
         // 购物车
-        cart: [],
+        // 请从本地缓存中获取 localStorage.getItem('cart')
+
         // goods
         allProducts: [
             { id: 1, name: '书包', price: 100, image: 'https://img13.360buyimg.com/jdcms/s460x460_jfs/t1/227922/7/13824/61489/65db59c0Fbb4c1572/075adffbfa8abe99.jpg.avif' },
@@ -44,7 +46,11 @@ const store = createStore({
         onLogout (state) {
             localStorage.removeItem('username');
             console.log('登出成功');
-        }
+        },
+        // 用字符串更新购物车
+        updateCart({commit}, arg) {
+            localStorage.setItem('cart', arg);
+        },
     },
     getters: {
         isLogin() {
@@ -53,6 +59,9 @@ const store = createStore({
         username() {
             return localStorage.username;
         },
+        cart() {
+            return localStorage.cart;
+        }
     },
     actions: {
         // 用户登录

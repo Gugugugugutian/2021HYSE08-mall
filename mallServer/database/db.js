@@ -6,6 +6,6 @@ module.exports = {
         password: '123456',
         database:'mallServer',
         port: 3306,
-        charset:'UTF8_GENERAL_CI'
+        charset:'utf8mb4'
     }
 };

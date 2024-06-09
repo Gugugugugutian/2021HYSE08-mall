@@ -2,7 +2,7 @@
   <main class="home-view">
     <div class="top-section">
       <div class="left-block">
-        <el-carousel height="450px">
+        <el-carousel height:450px>
           <el-carousel-item v-for="item in images" :key="item.id">
             <img :src="item.image" alt="" style="width: 100%; position: relative; bottom: 50%;">
           </el-carousel-item>

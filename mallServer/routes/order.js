@@ -103,45 +103,24 @@ router.post('/create', function (req, res, next) {
     });
 });
 
-function getOrderItem(orderId) {
-    console.log(orderId);
-    return new Promise((resolve, reject) => {
-        pool.getConnection(function (err, connection) {
-            connection.query(sql.queryOrderItem, [orderId], function (err, result) {
-                if (err) {
-                    console.log(err.message);
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
-            });
-        });
-    });
-}
-// 根据用户名查询订单
+// 根据用户名查询订单id和基本信息
 // url: /orders/query
 // params: username
+// response: orderid, date, total, address, orderTime, completionTime
 router.get('/query', function (req, res, next) {
-    let order = [];
-    return new Promise((resolve, reject) => {
-        // 根据用户名获得所有订单
-        const username = req.query.username;
-        pool.getConnection(function (err, connection) {
-            connection.query(sql.queryOrder, [username], function (err, result) {
-                if (err) {
-                    console.log(err.message);
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
-            });
-        });
-    }).then(result => {
-        res.status(200).send({
-            msg: '查询订单成功',
-            order: result,
-        });
-    });
+    pool.query(sql.queryOrder, [req.query.username], function (err, result) {
+        if(err) {
+            res.status(500).json({
+                msg: '查询订单失败',
+                err: err.message,
+            })
+        } else {
+            res.status(200).json({
+                msg: '查询订单成功',
+                order: result,
+            })
+        }
+    })
 });
 
 // 根据订单id查询订单明细
@@ -149,12 +128,19 @@ router.get('/query', function (req, res, next) {
 // params: orderId
 router.get('/queryitem', function (req, res, next) {
     const orderId = req.query.orderId;
-    getOrderItem(orderId).then((result) => {
-        res.status(200).send({
-            msg: '查询订单明细成功',
-            orderItem: result,
-        });
-    });
+    pool.query(sql.queryOrderItem, [orderId], function (err, result) {
+        if(err) {
+            res.status(500).json({
+                msg: '查询订单失败',
+                err: err.message,
+            })
+        } else {
+            res.status(200).json({
+                msg: '查询订单成功',
+                order: result,
+            })
+        }
+    })
 });
 
 // 订单支付

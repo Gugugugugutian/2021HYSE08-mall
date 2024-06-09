@@ -49,14 +49,14 @@ export default {
     };
   },
   computed: {
-    selectedItems() {
-      return this.cartItems.filter(item => item.selected);
-    },
+    //selectedItems() {
+     // return this.cartItems.filter(item => item.selected);
+    //},
     selectedItemsCount() {
-      return this.selectedItems.reduce((sum, item) => sum + item.quantity, 0);
+      return this.cartItems.reduce((sum, item) => sum + item.quantity, 0);
     },
     selectedItemsTotal() {
-      return this.selectedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      return this.cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
     },
     // 获取购物车内容
     getCartItems() {
@@ -147,6 +147,26 @@ export default {
         console.log('Updated cart string after deletion:', cartString);
       } catch (error) {
         console.error(`Error deleting item with id: ${id}`, error);
+      }
+    },
+    async deleteSelected() {
+      try {
+        // 过滤出未被选中的商品
+        const unselectedItems = this.cartItems.filter(item => !item.selected);
+        const idsToDelete = this.cartItems.filter(item => !item.selected).map(item => item.id);
+
+        // 更新购物车字符串
+        //let cartString = localStorage.getItem('cart') || '';
+        const cart = unselectedItems.map(item => ({ id: item.id, quantity: item.quantity }));
+        let cartString = this.stringifyCart(cart);
+        localStorage.setItem('cart', cartString);
+        console.log('Updated cart string after deleting unselected items:', cartString);
+
+        // 更新 cartItems 数组
+        this.cartItems = unselectedItems;
+        console.log('Cart items after deleting unselected:', this.cartItems);
+      } catch (error) {
+        console.error('Error deleting unselected items:', error);
       }
     },
 

@@ -15,3 +15,12 @@ export function searchGoods(keyword){
         },
     })
 }
+
+export function getGoodsById(goodsId){
+    return httpGet({
+        url: '/api/goods/id',
+        params: {
+            id: goodsId,
+        },
+    })
+}

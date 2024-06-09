@@ -57,8 +57,16 @@ export default {
     selectedItemsTotal() {
       return this.selectedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
     },
+    // 获取购物车内容
+    getCartItems() {
+      return this.$store.getters.cart;
+    }
   },
   methods: {
+    // 更新购物车内容
+    updateCartItems(str) {
+      this.$store.commit('updateCart', str);
+    },
     async fetchCartItems() {
       try {
         const response = await axios.get('/api/cart/items');

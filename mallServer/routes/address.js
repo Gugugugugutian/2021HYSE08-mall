@@ -10,12 +10,12 @@ var sql = {
     createAddressTable:
         'CREATE TABLE IF NOT EXISTS address (' +
         'id INT NOT NULL AUTO_INCREMENT, ' + // id
-        'username VARCHAR(20) NOT NULL, ' + // 地址对应的用户名
-        'name VARCHAR(20) NOT NULL, ' +     // 姓名
+        'username VARCHAR(50) NOT NULL, ' + // 地址对应的用户名
+        'name VARCHAR(50) NOT NULL, ' +     // 姓名
         'phone VARCHAR(20) NOT NULL, ' +    // 电话
         'city VARCHAR(20) NOT NULL,' +      // 城市
         'street VARCHAR(100) NOT NULL, ' + // 街道
-        'PRIMARY KEY (id))',
+        'PRIMARY KEY (id)) charset=utf8mb4; ',
     // 添加地址
     addAddress: 'INSERT INTO address (username, name, phone, city, street) VALUES (?, ?, ?, ?, ?)',
     // 根据用户username获取地址

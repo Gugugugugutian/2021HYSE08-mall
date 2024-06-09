@@ -68,19 +68,38 @@ export default {
     updateCartItems(str) {
       this.$store.commit('updateCart', str);
     },
-
     async fetchCartItems() {
       try {
-        const response = await axios.get('/api/cart/items');
-        this.cartItems = response.data.map(item => ({
-          ...item,
+        const cartString = localStorage.getItem('cart') || '';
+        const cart = this.parseCart(cartString);
+
+        // 使用 Promise.all 并行获取每个商品的信息
+        const fetchItemsPromises = cart.map(item => this.fetchCartItem(item.id).then(product => ({
+          ...product,
+          quantity: item.quantity,
           selected: false,
-          price: parseFloat(item.price),  // 确保价格是数字
-          quantity: parseInt(item.quantity, 10)  // 确保数量是数字
-        }));
+        })));
+
+        this.cartItems = await Promise.all(fetchItemsPromises);
         console.log('Fetched cart items:', this.cartItems);
       } catch (error) {
         console.error('Error fetching cart items:', error);
+      }
+    },
+
+    async fetchCartItem(id) {
+      try {
+        const response = await axios.get(`/api/goods/${id}`);
+        const item = response.data;
+        return {
+          id: item.id.toString(), // 确保ID是字符串
+          name: item.name,
+          price: parseFloat(item.price), // 确保价格是数字
+          stock: item.stock,
+          img: item.img // 假设每个商品都有一个图片URL
+        };
+      } catch (error) {
+        console.error(`获取购物车商品信息时出错：`, error);
       }
     },
     toggleSelectAll() {
@@ -130,41 +149,41 @@ export default {
     },
     incrementQuantity(item) {
       try {
-        // 获取当前购物车字符串
         let cartString = localStorage.getItem('cart') || '';
-        // 解析购物车字符串为对象数组
         let cart = this.parseCart(cartString);
-        // 当前要添加的商品信息
-        let newItemQuantity = 1; // +1
-        if (item.quantity > 1) {
-          item.quantity += newItemQuantity;
+        let cartItem = cart.find(cartItem => cartItem.id === item.id);
+        if (cartItem && cartItem.quantity < item.stock) {
+          cartItem.quantity += 1;
+          
         }
-        // 将对象数组转换为字符串格式
         let newCartString = this.stringifyCart(cart);
-        // 保存更新后的购物车字符串到本地存储
         localStorage.setItem('cart', newCartString);
-        console.log(this.product,'count sub 1:');
-      }catch (error) {
+        item.quantity += 1;
+        console.log('Updated cart item quantity:', this.cartItems);
+      } catch (error) {
         console.error('Error incrementing item quantity:', error);
       }
     },
     decrementQuantity(item) {
       try {
-        // 获取当前购物车字符串
         let cartString = localStorage.getItem('cart') || '';
-        // 解析购物车字符串为对象数组
         let cart = this.parseCart(cartString);
-        // 当前要添加的商品信息
-        let newItemQuantity = -1; // -1
-        if (item.quantity > 1) {
-          item.quantity += newItemQuantity;
+        let cartItem = cart.find(cartItem => cartItem.id === item.id);
+        if (cartItem) {
+          if (cartItem.quantity > 1) {
+            cartItem.quantity -= 1;
+          } else {
+            cart = cart.filter(cartItem => cartItem.id !== item.id);
+            this.cartItems = this.cartItems.filter(cartItem => cartItem.id !== item.id);
+          }
         }
-        // 将对象数组转换为字符串格式
         let newCartString = this.stringifyCart(cart);
-        // 保存更新后的购物车字符串到本地存储
         localStorage.setItem('cart', newCartString);
-        console.log(this.product,'count sub 1:');
-      }catch (error) {
+        if (item.quantity > 1) {
+          item.quantity -= 1;
+        }
+        console.log('Updated cart item quantity:', this.cartItems);
+      } catch (error) {
         console.error('Error decrementing item quantity:', error);
       }
     },
@@ -210,8 +229,8 @@ export default {
     //   }
     // },
   },
-  mounted() {
-    this.fetchCartItems();
+  async mounted() {
+    await this.fetchCartItems();
   },
 };
 </script>

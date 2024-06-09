@@ -115,7 +115,6 @@ export default {
         item.selected = this.selectAll;
       });
     },
-
     parseCart(str) {
       let result = [];
       if (str) {
@@ -132,6 +131,25 @@ export default {
     stringifyCart(cart) {
       return cart.map(item => `${item.id}:${item.quantity}`).join(',');
     },
+    async deleteItem(id) {
+      try {
+        console.log(`Attempting to delete item with id: ${id}`);
+        // 从 cartItems 数组中删除对应的商品
+        this.cartItems = this.cartItems.filter(item => item.id !== id.toString());
+        console.log('Updated cart items after deletion:', this.cartItems);
+
+        // 更新购物车字符串
+        let cartString = localStorage.getItem('cart') || '';
+        let cart = this.parseCart(cartString);
+        cart = cart.filter(cartItem => cartItem.id !== id.toString());
+        cartString = this.stringifyCart(cart);
+        localStorage.setItem('cart', cartString);
+        console.log('Updated cart string after deletion:', cartString);
+      } catch (error) {
+        console.error(`Error deleting item with id: ${id}`, error);
+      }
+    },
+
     incrementQuantity(item) {
       try {
         let cartString = localStorage.getItem('cart') || '';

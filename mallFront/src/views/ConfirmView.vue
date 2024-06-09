@@ -27,9 +27,9 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
-import axios from 'axios';
 import AddressModal from './AddressModal.vue'; // 引入 AddressModal 组件
 import { getAddressByUsername } from "@/api/address.js";
+import router from "@/router/index.js";
 
 const store = useStore();
 const username = computed(() => store.getters.username); // 从 Vuex 获取用户名
@@ -60,8 +60,21 @@ const selectAddress = (address) => { // 选择地址后更新默认地址
   showModal.value = false;
 };
 
+// 地址转为字符串
+const addressToString = (address) => {
+  return `${address.name} ${address.phone} ${address.city} ${address.street}`;
+};
+
 const confirmOrder = () => {
-  alert('订单已确认');
+  // 提交确认订单到后台
+  console.log('Confirming order...' + this.$store.getters.cart);
+  this.$store.dispatch('confirmOrder', {
+    address: addressToString(defaultAddress.value),
+    cart: this.$store.getters.cart,
+    username: this.$store.getters.username,
+  })
+  // 路由跳转到支付页面
+  router.push('/pay');
 };
 
 onMounted(() => {

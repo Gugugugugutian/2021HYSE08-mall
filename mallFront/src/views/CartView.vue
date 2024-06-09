@@ -209,7 +209,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .cart-view {
   font-family: Arial, sans-serif;
 }

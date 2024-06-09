@@ -1,5 +1,6 @@
 import { userLogin, checkLoginStatus, userLogout } from "@/api/user.js";
 import { createStore } from 'vuex'
+import {createOrder} from "@/api/orders.js";
 const store = createStore({
     state: {
         // 用户信息
@@ -64,6 +65,16 @@ const store = createStore({
         }
     },
     actions: {
+        // 提交订单
+        createOrder({commit}, arg) {
+            return new Promise((resolve, reject) => {
+                createOrder(arg.username, arg.address, arg.cartString).then(res => {
+                    resolve(res);
+                }).catch(err => {
+                    reject(err);
+                })
+            })
+        },
         // 用户登录
         userLogin({commit}, arg) {
             return new Promise((resolve, reject) => {

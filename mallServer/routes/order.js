@@ -20,7 +20,7 @@ var sql = {
     createOrderItemTable:
         'create table if not exists order_item_table(' +
         'orderId int not null, ' +      // 订单id
-        'name varchar(20),' +           // 商品名称
+        'name varchar(255),' +           // 商品名称
         'quantity int,' +               // 商品数量
         'price varchar(20)'+            // 商品最终价格
         ')charset=utf8mb4',

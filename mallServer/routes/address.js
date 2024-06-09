@@ -10,7 +10,7 @@ var sql = {
     createAddressTable:
         'CREATE TABLE IF NOT EXISTS address (' +
         'id INT NOT NULL AUTO_INCREMENT, ' + // id
-        'username VARCHAR(50) NOT NULL, ' + // 地址对应的用户名
+        'username VARCHAR(20) NOT NULL, ' + // 地址对应的用户名
         'name VARCHAR(50) NOT NULL, ' +     // 姓名
         'phone VARCHAR(20) NOT NULL, ' +    // 电话
         'city VARCHAR(20) NOT NULL,' +      // 城市

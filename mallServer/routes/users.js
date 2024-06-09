@@ -14,7 +14,7 @@ var sql = {
         'username VARCHAR(20) NOT NULL, ' +
         'password VARCHAR(20) NOT NULL, ' +
         'isAdmin BOOLEAN NOT NULL, ' +
-        'PRIMARY KEY (id));',
+        'PRIMARY KEY (id))charset=utf8mb4;',
     // 创建用户
     createUser: 'INSERT INTO users(username, password, isAdmin) VALUES (?, ?, ?);',
     // 获取用户（根据用户名和密码）

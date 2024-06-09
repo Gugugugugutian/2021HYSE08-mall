@@ -14,7 +14,7 @@ var sql = {
         'price INT NOT NULL,' +                 // 价格
         'stock INT NOT NULL,' +                 // 库存
         'img VARCHAR(255) NOT NULL,' +          // 图片
-        'PRIMARY KEY (id))',
+        'PRIMARY KEY (id)) charset=utf8mb4; ',
     // 插入商品
     insertGoods: 'INSERT INTO goods(name,price,stock,img) VALUES(?,?,?,?)',
     // 展示所有

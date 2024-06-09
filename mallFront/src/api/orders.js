@@ -44,7 +44,7 @@ export function queryOrderById(orderId) {
 export function payOrder(orderId) {
     return httpPost({
         url: '/api/orders/pay',
-        params: {
+        data: {
             orderId: orderId,
         },
     });

@@ -20,11 +20,17 @@ const router = createRouter({
         {
           path: 'confirm',
           name: 'confirm',
-          component: () => import('../views/ConfirmView.vue')
+          component: () => import('../views/ConfirmView.vue'),
+          meta: {
+            requireAuth: true,
+          }
         }, {
           path: 'pay',
           name: 'pay',
-          component: () => import('../views/PayView.vue')
+          component: () => import('../views/PayView.vue'),
+          meta: {
+            requireAuth: true,
+          }
         }, {
           path: 'cart',
           name: 'cart',

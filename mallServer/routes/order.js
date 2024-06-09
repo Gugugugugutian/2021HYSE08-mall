@@ -228,6 +228,7 @@ router.post('/pay', function (req, res, next) {
                 });
             }
         })
+        connection.release();
     })
 })
 

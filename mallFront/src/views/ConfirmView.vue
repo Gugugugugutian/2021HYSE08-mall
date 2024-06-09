@@ -67,19 +67,16 @@ const addressToString = (address) => {
 
 const confirmOrder = () => {
   // 提交确认订单到后台
-  console.log('Confirming order...' + this.$store.getters.cart);
-  this.$store.dispatch('confirmOrder', {
+  console.log('Confirming order...' + store.getters.cart);
+  store.dispatch('createOrder', {
     address: addressToString(defaultAddress.value),
-    cart: this.$store.getters.cart,
-    username: this.$store.getters.username,
-  }).then(() => {
-    // 路由跳转到支付页面
-    router.push('/pay');
-  }).catch((error) => {
-    // 报错
-    alert(error);
+    cart: store.getters.cart,
+    username: store.getters.username,
   })
-};
+  // 路由跳转到支付页面
+  router.push('/cart/pay');
+  router.go(1);
+}
 
 onMounted(() => {
   fetchAddresses(); // 组件挂载时获取地址数据

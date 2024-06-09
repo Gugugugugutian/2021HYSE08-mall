@@ -1,24 +1,51 @@
 <template>
   <div class="pay-view">
-
-    <div class="order-steps">
-      <h2>购物车 &gt; 确认订单 &gt; 支付</h2>
-    </div>
-    <div class="payment-info">
-      <p>买给 顾田 的 9 件商品</p>
-      <p class="total-price">¥ 50.00</p>
+    <div v-if="orderId" class="payment-info">
+      <p>请您支付{{ orderId }}号订单</p>
+      <p class="total-price">¥ {{ price }}</p>
       <button @click="confirmPayment">确认支付</button>
+      <p>{{ msg }}</p>
+    </div>
+    <div v-else>
+      <p>您还没有下单</p>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  methods: {
-    confirmPayment() {
-      alert('支付已完成');
-      // 可以在此处添加跳转到订单完成页面或其他逻辑
+  computed: {
+    price() {
+      return this.$store.getters.payOrderPrice;
     },
+    orderId() {
+      return this.$store.getters.payOrderId;
+    }
+  },
+  methods: {
+    async confirmPayment() {
+      const c = await this.$store.dispatch('payOrder1', {
+        orderId: this.orderId,
+      });
+      // 显示信息
+      this.msg = c.msg;
+      // 清除缓存中的订单信息
+      localStorage.removeItem('payOrderId');
+      localStorage.removeItem('payOrderPrice');
+      // 刷新页面
+      this.$router.go(0);
+    }
+  },
+  watch: {
+    // 监听订单号，如果订单号发生变化，则刷新页面
+    orderId() {
+      this.$router.go(0);
+    },
+  },
+  data() {
+    return {
+      msg: '',
+    };
   },
 };
 </script>

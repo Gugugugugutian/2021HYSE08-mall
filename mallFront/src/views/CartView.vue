@@ -38,7 +38,8 @@
 
 <script>
 import axios from 'axios';
-import { createOrder } from '@/api/orders'; // 确保路径正确
+import { createOrder } from '@/api/orders';
+import router from "@/router/index.js"; // 确保路径正确
 
 export default {
   data() {
@@ -174,34 +175,40 @@ export default {
         console.error('Error updating cart item:', error);
       }
     },
-    async submitOrder() {
-      try {
-        const username = 'testuser'; // Replace with actual username
-        const date = new Date().toISOString().split('T')[0];
-        const total = this.selectedItemsTotal;
-        const address = 'Test Address'; // Replace with actual address
-        const orderTime = new Date().toISOString();
-        const completionTime = new Date().toISOString(); // Replace with actual completion time
-        const goods = this.selectedItems;
 
-        console.log('Creating order with the following data:', {
-          username, date, total, address, orderTime, completionTime, goods
-        });
-
-        const response = await createOrder(username, date, total, address, orderTime, completionTime, goods);
-        if (response && response.data) {
-          console.log('Order created successfully:', response.data);
-          // 订单创建成功后的操作，例如清空购物车或导航到订单确认页面
-          this.cartItems = this.cartItems.filter(item => !goods.includes(item));
-          alert('订单已提交！');
-          // 这里你可以添加任何其他的逻辑来处理订单成功后，例如跳转到订单确认页面
-        } else {
-          console.error('Failed to create order:', response);
-        }
-      } catch (error) {
-        console.error('Error creating order:', error);
-      }
+    // 提交订单
+    submitOrder() {
+      router.push('/cart/confirm');
+      router.go(1);
     },
+    // async submitOrder() {
+    //   try {
+    //     const username = 'testuser'; // Replace with actual username
+    //     const date = new Date().toISOString().split('T')[0];
+    //     const total = this.selectedItemsTotal;
+    //     const address = 'Test Address'; // Replace with actual address
+    //     const orderTime = new Date().toISOString();
+    //     const completionTime = new Date().toISOString(); // Replace with actual completion time
+    //     const goods = this.selectedItems;
+    //
+    //     console.log('Creating order with the following data:', {
+    //       username, date, total, address, orderTime, completionTime, goods
+    //     });
+    //
+    //     const response = await createOrder(username, date, total, address, orderTime, completionTime, goods);
+    //     if (response && response.data) {
+    //       console.log('Order created successfully:', response.data);
+    //       // 订单创建成功后的操作，例如清空购物车或导航到订单确认页面
+    //       this.cartItems = this.cartItems.filter(item => !goods.includes(item));
+    //       alert('订单已提交！');
+    //       // 这里你可以添加任何其他的逻辑来处理订单成功后，例如跳转到订单确认页面
+    //     } else {
+    //       console.error('Failed to create order:', response);
+    //     }
+    //   } catch (error) {
+    //     console.error('Error creating order:', error);
+    //   }
+    // },
   },
   mounted() {
     this.fetchCartItems();

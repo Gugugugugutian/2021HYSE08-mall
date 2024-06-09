@@ -1,6 +1,6 @@
 import { userLogin, checkLoginStatus, userLogout } from "@/api/user.js";
 import { createStore } from 'vuex'
-import {createOrder} from "@/api/orders.js";
+import {createOrder, payOrder} from "@/api/orders.js";
 const store = createStore({
     state: {
         // 用户信息
@@ -10,32 +10,9 @@ const store = createStore({
         // 购物车
         // 请从本地缓存中获取 localStorage.getItem('cart')
 
-        // goods
-        allProducts: [
-            { id: 1, name: '书包', price: 100, image: 'https://img13.360buyimg.com/jdcms/s460x460_jfs/t1/227922/7/13824/61489/65db59c0Fbb4c1572/075adffbfa8abe99.jpg.avif' },
-            { id: 2, name: '椅子2', price: 150, image: 'https://img14.360buyimg.com/jdcms/s460x460_jfs/t1/229379/13/4014/85507/655d62e7F106e7769/cfa900da74ba1414.jpg.avif' },
-            { id: 3, name: '商品3', price: 200, image: 'https://img14.360buyimg.com/jdcms/s460x460_jfs/t1/230758/32/17683/82372/664b1593Ff41795a9/d24ee792bb8ce8f9.jpg.avif' },
-            { id: 4, name: '枣', price: 250, image: 'https://img14.360buyimg.com/jdcms/s460x460_jfs/t1/229379/13/4014/85507/655d62e7F106e7769/cfa900da74ba1414.jpg.avif' },
-            { id: 5, name: '倒挂金钩', price: 300, image: 'https://img20.360buyimg.com/jdcms/s460x460_jfs/t1/172759/5/42418/140906/6645bf32Fb6af1595/688667f8dbae6d38.jpg.avif' },
-            { id: 6, name: '芜湖', price: 350, image: 'https://img14.360buyimg.com/jdcms/s460x460_jfs/t1/229379/13/4014/85507/655d62e7F106e7769/cfa900da74ba1414.jpg.avif' },
-            { id: 7, name: '王八', price: 400, image: 'https://img20.360buyimg.com/jdcms/s460x460_jfs/t1/172759/5/42418/140906/6645bf32Fb6af1595/688667f8dbae6d38.jpg.avif' },
-            { id: 8, name: '商品8', price: 450, image: 'https://img14.360buyimg.com/jdcms/s460x460_jfs/t1/229379/13/4014/85507/655d62e7F106e7769/cfa900da74ba1414.jpg.avif' },
-            { id: 9, name: '麻沸散', price: 500, image: 'https://img14.360buyimg.com/jdcms/s460x460_jfs/t1/230758/32/17683/82372/664b1593Ff41795a9/d24ee792bb8ce8f9.jpg.avif' },
-            { id: 10, name: '马楼', price: 550, image: 'https://img14.360buyimg.com/jdcms/s460x460_jfs/t1/229379/13/4014/85507/655d62e7F106e7769/cfa900da74ba1414.jpg.avif' },
-            { id: 11, name: '金刚', price: 550, image: 'https://img14.360buyimg.com/jdcms/s460x460_jfs/t1/229379/13/4014/85507/655d62e7F106e7769/cfa900da74ba1414.jpg.avif' }
-        ],
-        //活动海报
-        images: [
-            'https://imgcps.jd.com/img-cubic/creative_server_cia_jdcloud/v2/2000366/100006849854/FocusFullshop/CkJqZnMvdDEvMjM5NTA4LzQvOTU1Ni8xMzY5MzgvNjY0YTUwMjJGMjU4ODNmM2EvN2Q5OTg2ODE5ODMzZDg3Yy5wbmcSCTEtdHlfMF81MjACOO6LekITCg_lqIHmiIjnlLXohJHljIUQAUITCg_kvJjmg6DkuqvkuI3lgZwQAkIQCgznq4vljbPmiqLotK0QBkIKCgbnsr7pgIkQB1i-2v3G9AI/cr/s/q.jpg',
-            'https://imgcps.jd.com/img-cubic/creative_server_cia_jdcloud/v2/2000366/100010511786/FocusFullshop/CkRqZnMvdDEvMjAwMTE5LzE1LzQzNDE3Lzc2NzYzNi82NjRhNTA0MkZhOWNhODExNi9kMmYyOWY5YzQ1YTEwMjQ0LnBuZxIJMy10eV8wXzU0MAI47ot6Qh8KG-e-jue0oOS9s-WEv-WptOW5vOWEv-WltueyiRABQhMKD-S9oOWAvOW-l-aLpeaciRACQhAKDOeri-WNs-aKoui0rRAGQgoKBuS8mOmAiRAHWKqb3cj0Ag/cr/s/q.jpg',
-            'https://imgcps.jd.com/img-cubic/creative_server_cia_jdcloud/v2/2000318/100027956045/FocusFullshop/CkJqZnMvdDEvMjE2NDYzLzgvNDE1OTcvNDYyNjgvNjY0YTUxNzZGYjc5ZGJkN2IvYzAzMjI3ODMxMTA5ZDg0MS5wbmcSCTMtdHlfMF81NDACOL6LekIcChjpq5jlsJTlpKvlpbPlo6vlj4zogqnljIUQAUIQCgzpnIfmkrzmnaXkuLQQAkIQCgznq4vljbPmiqLotK0QBkIKCgbkvJjpgIkQB1jN9oXR9AI/cr/s/q.jpg'
-        ],
-        //热销商品
-        hotProducts:[
-            { id: 1, name: '热销商品A', price: 100, image: 'https://img13.360buyimg.com/jdcms/s460x460_jfs/t1/227922/7/13824/61489/65db59c0Fbb4c1572/075adffbfa8abe99.jpg.avif', description: '热销商品1描述' },
-            { id: 2, name: '热销商品B', price: 150, image: 'https://img13.360buyimg.com/jdcms/s460x460_jfs/t1/227922/7/13824/61489/65db59c0Fbb4c1572/075adffbfa8abe99.jpg.avif', description: '热销商品2描述为VEBU夫GIEINVURVN i文革后期二婚OVWVBUWE i v你QEUVI巫女哦亲' },
-            // ... more products
-        ],
+        // 提交订单后返回的用于支付的数据
+        // 请从本地缓存中获取 localStorage.getItem('payOrderId')
+        // 请从本地缓存中获取 localStorage.getItem('payOrderPrice')
     },
     mutations: {
         // username 用户登录时更新state
@@ -52,6 +29,11 @@ const store = createStore({
         updateCart({commit}, arg) {
             localStorage.setItem('cart', arg);
         },
+        // 用字符串更新支付数据
+        updatePayData({commit}, arg) {
+            localStorage.setItem('payOrderId', arg.id);
+            localStorage.setItem('payOrderPrice', arg.price);
+        }
     },
     getters: {
         isLogin() {
@@ -62,13 +44,36 @@ const store = createStore({
         },
         cart() {
             return localStorage.cart;
-        }
+        },
+        payOrderId() {
+            return localStorage.payOrderId;
+        },
+        payOrderPrice() {
+            return localStorage.payOrderPrice;
+        },
     },
     actions: {
         // 提交订单
         createOrder({commit}, arg) {
             return new Promise((resolve, reject) => {
-                createOrder(arg.username, arg.address, arg.cartString).then(res => {
+                createOrder(arg.username, arg.address, arg.cart).then(res => {
+                    resolve(res);
+                }).catch(err => {
+                    reject(err);
+                })
+            }).then(res => {
+                console.log(res);
+                commit('updateCart', '');
+                commit('updatePayData', {
+                    id: res.orderId,
+                    price: res.total
+                });
+            })
+        },
+        // 支付订单
+        payOrder1({commit}) {
+            return new Promise((resolve, reject) => {
+                payOrder(this.getters.payOrderId).then(res => {
                     resolve(res);
                 }).catch(err => {
                     reject(err);

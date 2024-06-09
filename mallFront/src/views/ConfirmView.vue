@@ -1,7 +1,7 @@
 <template>
   <div class="confirm-view">
     <div class="order-steps">
-      <h2>购物车 &gt; 确认订单 &gt; 支付</h2>
+
     </div>
     <div class="shipping-info">
       <div class="address">
@@ -10,7 +10,7 @@
       </div>
       <button @click="showAddressModal">其他地址</button>
     </div>
-    <p class="address-tip">可以用一个弹窗让用户选择其他地址</p>
+    
     <div class="order-info">
       <h3>商品信息</h3>
       <p>参考CartView</p>
